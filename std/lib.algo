@@ -1,0 +1,174 @@
+Librairie
+
+Variable _texte en Chaîne
+Variable _fond  en Chaîne
+
+Variable _eteint en Chaîne
+Variables _gras,     __gras     en Chaîne
+Variables _attenue,  __attenue  en Chaîne
+Variables _italique, __italique en Chaîne
+Variables _souligne, __souligne en Chaîne
+Variables _clignote, __clignote en Chaîne
+Variables _inconnu,  __inconnu  en Chaîne
+Variables _inverse,  __inverse  en Chaîne
+
+Fonction rvb(r, v, b en Entier) en Chaîne
+  # Retourne un code pour le terminal qui
+  # change la couleur du texte.
+  Variable code en Chaîne
+  code <- "\033[38;2;"
+  code <- code & Chaîne(r) & ";"
+  code <- code & Chaîne(v) & ";"
+  code <- code & Chaîne(b) & "m"
+  Retourne code
+FinFonction
+
+Fonction frvb(r, v, b en Entier) en Chaîne
+  # Retourne un code pour le terminal qui
+  # change la couleur du fond.
+  Variable code en Chaîne
+  code <- "\033[48;2;"
+  code <- code & Chaîne(r) & ";"
+  code <- code & Chaîne(v) & ";"
+  code <- code & Chaîne(b) & "m"
+  Retourne code
+FinFonction
+
+Fonction attr(a en Chaîne) en Chaîne
+  # Retourne un code pour le terminal qui
+  # change un attribut du texte :
+  # gr(as) at(tenué) it(alique) so(uligné) cl(ignotant) in(verse)
+  Si a = "gr" Alors
+    Retourne "\033[1m"
+  SinonSi a = "at" Alors
+    Retourne "\033[2m"
+  SinonSi a = "it" Alors
+    Retourne "\033[3m"
+  SinonSi a = "so" Alors
+    Retourne "\033[4m"
+  SinonSi a = "cl" Alors
+    Retourne "\033[5m"
+  SinonSi a = "in" Alors
+    Retourne "\033[7m"
+  FinSi
+  Retourne ""
+FinFonction
+
+Fonction fina() en Chaîne
+  # Annule tous les attributs/couleurs en cours.
+  Retourne "\033[0m"
+FinFonction
+
+Fonction base(nombre, base en Entier) en Chaîne
+  Variables caracteres, resultat en Chaîne
+  Si base < 2 OU base > 36 Alors
+    Ecrire "Erreur : base invalide >", base, "< [2-36]"
+    Retourne ""
+  FinSi
+  Si nombre = 0 Alors
+    Retourne "0"
+  FinSi
+  caracteres <- "0123456789ABCDEFGHIJKLMMNOPQRSTUVWXYZ"
+  resultat <- ""
+  TantQue nombre > 0
+    resultat <- Extraire(caracteres, nombre % base + 1, 1) & resultat
+    nombre <- nombre / base
+  FinTantQue
+  Retourne resultat
+FinFonction
+
+Fonction base10(nombre en Chaîne, base en Entier) en Entier
+  Variable caracteres en Chaîne
+  Variables index, resultat en Entier
+  Si base < 2 OU base > 36 Alors
+    Ecrire "Erreur : base invalide >", base, "< [2-36]"
+    Retourne ""
+  FinSi
+  Si nombre = 0 Alors
+    Retourne "0"
+  FinSi
+  caracteres <- "0123456789ABCDEFGHIJKLMMNOPQRSTUVWXYZ"
+  resultat <- 0
+  Pour index <- 1 à Longueur(nombre)
+    resultat <- resultat * base
+    resultat <- resultat + Trouve(caracteres, Extraire(nombre, index, 1)) - 1
+  index Suivant
+  Retourne resultat
+FinFonction
+
+Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
+  # Scinde une chaine de caractères en éléments d'un tableau
+  # selon un séparateur.
+
+  Variable sous_chaine en Chaîne
+  Variable index en Entier
+
+  index <- -1
+
+  TantQue Trouve(chaine, separateur) > 0
+    sous_chaine <- Gauche(chaine, Trouve(chaine, separateur) - 1)
+    index <- index + 1
+    Redim elements[index]
+    elements[index] <- sous_chaine
+    chaine <- Droite(chaine, Longueur(chaine) - Trouve(chaine, separateur))
+  FinTantQue
+
+  index <- index + 1
+  Redim elements[index]
+  elements[index] <- chaine
+
+FinProcédure
+
+Procédure efface_ecran()
+  Ecrire "\033[2J\033[H" \
+FinProcédure
+
+Procédure pos_curseur(lgn, col en Entier)
+  # Positionne le curseur : lgn (ligne) et col (colonne).
+  Ecrire "\033[" & Chaîne(lgn) & ";" & Chaîne(col) & "H" \
+FinProcédure
+
+Procédure pos_ecrire(lgn, col en Entier, texte en Chaîne)
+  # Ecrit le texte à la position donnée.
+  pos_curseur(lgn, col)
+  Ecrire texte \
+FinProcédure
+
+Procédure efface_fdl()
+  # Efface depuis la position du curseur jusqu'à la fin de la ligne.
+  Ecrire "\033[K" \
+FinProcédure
+
+Procédure efface_bde()
+  # Efface depuis la position du curseur jusqu'au bas de l'écran.
+  Ecrire "\033[0J" \
+FinProcédure
+
+Procédure efface_ligne()
+  # Efface la ligne à la position du curseur.
+  Ecrire "\033[2K" \
+FinProcédure
+
+Procédure cache_curseur()
+  Ecrire "\033[?25l" \
+FinProcédure
+
+Procédure montre_curseur()
+  Ecrire "\033[?25h" \
+FinProcédure
+
+Procédure sauve_curseur()
+  # Enregistre la position du curseur.
+  Ecrire "\033[s" \
+FinProcédure
+
+Procédure restaure_curseur()
+  # Restaure la position du curseur enregistée precédemment.
+  Ecrire "\033[u" \
+FinProcédure
+
+Procédure reinit()
+  # Réinitialise les attributs du terminal.
+  Ecrire "\033[21m\033[22m\033[23m\033[24m\033[25m\033[27m"
+FinProcédure
+
