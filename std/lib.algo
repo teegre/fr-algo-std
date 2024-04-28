@@ -1,17 +1,5 @@
 Librairie
 
-Variable _texte en Chaîne
-Variable _fond  en Chaîne
-
-Variable _eteint en Chaîne
-Variables _gras,     __gras     en Chaîne
-Variables _attenue,  __attenue  en Chaîne
-Variables _italique, __italique en Chaîne
-Variables _souligne, __souligne en Chaîne
-Variables _clignote, __clignote en Chaîne
-Variables _inconnu,  __inconnu  en Chaîne
-Variables _inverse,  __inverse  en Chaîne
-
 Fonction rvb(r, v, b en Entier) en Chaîne
   # Retourne un code pour le terminal qui
   # change la couleur du texte.
