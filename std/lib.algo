@@ -1,5 +1,67 @@
 Librairie
 
+Fonction estalpha(c en Caractère) en Booléen
+  # Retourne VRAI si `c` est un caractère alphabétique.
+  Variable réponse en Booléen
+
+  # A-Z
+  réponse <- (CodeCar(c) > 64) ET (CodeCar(c) < 91)
+  # a-z
+  réponse <- réponse OU ((CodeCar(c) > 96) ET (CodeCar(c) < 123))
+  # à...
+  réponse <- réponse OU ((CodeCar(c) > 191) ET (CodeCar(c) < 383))
+
+  Retourne réponse
+FinFonction
+
+Fonction majus(ch en Chaîne) en Chaîne
+  # Convertit une chaîne de caractères en majuscules.
+  Variable i en Entier
+  Variable résultat en Chaîne
+  Variable c en Caractère
+  Variable condition en Booléen
+
+  résultat <- ""
+
+  Pour i <- 1 à Longueur(ch)
+    c <- Extraire(ch, i, 1)
+    condition <- estalpha(c)
+    condition <- condition ET ((CodeCar(c) >  96) ET (CodeCar(c) < 123))
+    condition <- condition OU ((CodeCar(c) > 223) ET (CodeCar(c) < 254))
+    Si condition Alors
+      résultat <- résultat & Car(CodeCar(c) - 32)
+    Sinon
+      résultat <- résultat & c
+    FinSi
+  i Suivant
+
+  Retourne résultat
+FinFonction
+
+Fonction minus(ch en Chaîne) en Chaîne
+  # Convertit une chaîne de caractères en minuscules.
+  Variable i en Entier
+  Variable résultat en Chaîne
+  Variable c en Caractère
+  Variable condition en Booléen
+
+  résultat <- ""
+
+  Pour i <- 1 à Longueur(ch)
+    c <- Extraire(ch, i, 1)
+    condition <- estalpha(c)
+    condition <- condition ET ((CodeCar(c) >  64) ET (CodeCar(c) <  91))
+    condition <- condition OU ((CodeCar(c) > 191) ET (CodeCar(c) < 222))
+    Si condition Alors
+      résultat <- résultat & Car(CodeCar(c) + 32)
+    Sinon
+      résultat <- résultat & c
+    FinSi
+  i Suivant
+
+  Retourne résultat
+FinFonction
+
 Fonction rvb(r, v, b en Entier) en Chaîne
   # Retourne un code pour le terminal qui
   # change la couleur du texte.
