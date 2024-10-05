@@ -4,7 +4,7 @@ Librairie
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
 #########################################
 
-Fonction estalpha(c en Caractère) en Booléen
+Fonction EstAlpha(c en Caractère) en Booléen
   # Retourne VRAI si `c` est un caractère alphabétique.
   Variable réponse en Booléen
 
@@ -18,12 +18,12 @@ Fonction estalpha(c en Caractère) en Booléen
   Retourne réponse
 FinFonction
 
-Fonction estnum(c en Caractère) en Booléen
+Fonction EstNum(c en Caractère) en Booléen
   # Retourne VRAI si  `c` est un caractère numérique..
   Retourne (CodeCar(c) > 47) ET (CodeCar(c) < 58)
 FinFonction
 
-Fonction chaîne_estnum(chaîne en Chaîne) en Booléen
+Fonction ChEstNum(chaîne en Chaîne) en Booléen
   # Retourne VRAI si `chaîne` ne contient que des chiffres.
   Variable i en Entier
   Variable c en Caractère
@@ -33,13 +33,16 @@ Fonction chaîne_estnum(chaîne en Chaîne) en Booléen
 
   Pour i <- 1 à Longueur(chaîne)
     c <- Extraire(chaîne, i, 1)
-    réponse <- réponse ET estnum(c)
+    réponse <- réponse ET EstNum(c)
+    Si NON(réponse) Alors
+      Retourne FAUX
+    FinSi
   i Suivant
 
   Retourne réponse
 FinFonction
 
-Fonction majus(ch en Chaîne) en Chaîne
+Fonction Majus(ch en Chaîne) en Chaîne
   # Convertit une chaîne de caractères en majuscules.
   Variable i en Entier
   Variable résultat en Chaîne
@@ -50,7 +53,7 @@ Fonction majus(ch en Chaîne) en Chaîne
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    condition <- estalpha(c)
+    condition <- EstAlpha(c)
     condition <- condition ET ((CodeCar(c) >  96) ET (CodeCar(c) < 123))
     condition <- condition OU ((CodeCar(c) > 223) ET (CodeCar(c) < 254))
     Si condition Alors
@@ -63,7 +66,7 @@ Fonction majus(ch en Chaîne) en Chaîne
   Retourne résultat
 FinFonction
 
-Fonction minus(ch en Chaîne) en Chaîne
+Fonction Minus(ch en Chaîne) en Chaîne
   # Convertit une chaîne de caractères en minuscules.
   Variable i en Entier
   Variable résultat en Chaîne
@@ -74,7 +77,7 @@ Fonction minus(ch en Chaîne) en Chaîne
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    condition <- estalpha(c)
+    condition <- EstAlpha(c)
     condition <- condition ET ((CodeCar(c) >  64) ET (CodeCar(c) <  91))
     condition <- condition OU ((CodeCar(c) > 191) ET (CodeCar(c) < 222))
     Si condition Alors
@@ -87,8 +90,16 @@ Fonction minus(ch en Chaîne) en Chaîne
   Retourne résultat
 FinFonction
 
+Fonction CommencePar(ch, v en Chaîne) en Booléen
+  Retourne Gauche(ch, Longueur(v)) = v
+FinFonction
+
+Fonction FinitPar(ch, v en Chaîne) en Booléen
+  Retourne Droite(ch, Longueur(v)) = v
+FinFonction
+
 ###########################################
-# UTILITAIRES POUR MODIFIER DES ATTRIBUTS 
+# UTILITAIRES POUR MODIFIER DES ATTRIBUTS
 # DES CARACTÈRES AFFICHÉS DANS UN TERMINAL
 ###########################################
 
@@ -203,7 +214,7 @@ FinProcédure
 # AUTRES UTILITAIRES
 #####################
 
-Fonction base(nombre, base en Entier) en Chaîne
+Fonction Base(nombre, base en Entier) en Chaîne
   Variables caracteres, resultat en Chaîne
   Si base < 2 OU base > 36 Alors
     Retourne "-1"
@@ -220,20 +231,21 @@ Fonction base(nombre, base en Entier) en Chaîne
   Retourne resultat
 FinFonction
 
-Fonction base10(nombre en Chaîne, base en Entier) en Entier
-  Variable caracteres en Chaîne
+Fonction Base10(nombre en Quelconque, base en Entier) en Entier
+  Variables param, caracteres en Chaîne
   Variables index, car_index, resultat en Entier
+  param <- Chaîne(nombre)
   Si base < 2 OU base > 36 Alors
     Ecrire "Erreur : base invalide >", base, "< [2-36]"
     Retourne -1
   FinSi
-  Si nombre = 0 Alors
+  Si param = "0" Alors
     Retourne 0
   FinSi
   caracteres <- "0123456789ABCDEFGHIJKLMMNOPQRSTUVWXYZ"
   resultat <- 0
-  Pour index <- 1 à Longueur(nombre)
-    car_index <- Trouve(caracteres, Extraire(nombre, index, 1)) - 1
+  Pour index <- 1 à Longueur(param)
+    car_index <- Trouve(caracteres, Extraire(param, index, 1)) - 1
     Si car_index > base Alors
       Retourne -1
     FinSi
@@ -268,13 +280,13 @@ Fonction Index(valeur en Chaîne, T[] en Chaîne, casse en Booléen) en Entier
   Variable i en Entier
   Variables v1, v2 en Chaîne
   Si NON(casse) Alors
-    v2 <- minus(valeur)
+    v2 <- Minus(valeur)
   Sinon
     v2 <- valeur
   FinSi
   Pour i <- 0 à Taille(T) - 1
     Si NON(casse) Alors
-      v1 <- minus(T[i])
+      v1 <- Minus(T[i])
     FinSi
     Si v1 = v2 Alors
       Retourne i
@@ -319,7 +331,7 @@ Fonction AléaP(poids[] en Numérique) en Entier
   Retourne Taille(poids) - 1
 FinFonction
 
-Fonction SommeNum(T[] en Numérique) en Numérique
+Fonction Somme(T[] en Quelconque) en Numérique
   # Retourne la somme des valeurs d'un Tableau
   # contenant des Numériques.
   Variable i en Entier
@@ -342,8 +354,8 @@ Fonction SommeEnt(T[] en Entier) en Entier
   Retourne s
 FinFonction
 
-Fonction CompteNum(T[] en Numérique, valeur en Numérique) en Entier
-  # Retourne le nombre d'occurences d'une valeur Numérique
+Fonction Compte(T[] en Quelconque, valeur en Quelconque) en Entier
+  # Retourne le nombre d'occurences d'une valeur
   # se trouvant dans un Tableau
   Variables c, i en Entier
   c <- 0
@@ -381,7 +393,7 @@ Fonction CompteCh(T[] en Chaîne, valeur en Chaîne) en Entier
   Retourne c
 FinFonction
 
-Fonction IndexEnt(T[] en Entier, valeur en Entier) en Entier
+Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
   # Retourne l'index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
   Variable i en Entier
@@ -430,3 +442,27 @@ Fonction TMaxEnt(T[] en Entier) en Entier
   i Suivant
   Retourne n
 FinFonction
+
+Procédure Tri(&T[] en Quelconque, croissant en Booléen)
+  Variable temp en Quelconque
+  Variable i en Entier
+  Variables y, x en Booléen
+  y ← VRAI
+  TantQue y
+    y ← FAUX
+    Pour i ← 0 à Taille(T) - 2
+      Si croissant Alors
+        x <- T[i] > T[i+1]
+      Sinon
+        x <- T[i] < T[i+1]
+      FinSi
+      Si x Alors
+        temp ← T[i]
+        T[i] ← T[i+1]
+        T[i+1] ← temp
+        y ← VRAI
+      FinSi
+    i Suivant
+  FinTantQue
+FinProcédure
+
