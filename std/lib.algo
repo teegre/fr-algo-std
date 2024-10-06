@@ -331,24 +331,12 @@ Fonction AléaP(poids[] en Numérique) en Entier
   Retourne Taille(poids) - 1
 FinFonction
 
-Fonction Somme(T[] en Quelconque) en Numérique
-  # Retourne la somme des valeurs d'un Tableau
-  # contenant des Numériques.
+Fonction Somme(T[] en Quelconque) en Quelconque
+  # Retourne la somme des valeurs d'un Tableau.
   Variable i en Entier
-  Variable s en Numérique
-  s <- 0.0
-  Pour i <- 0 à Taille(T) - 1
-    s <- s + T[i]
-  i Suivant
-  Retourne s
-FinFonction
-
-Fonction SommeEnt(T[] en Entier) en Entier
-  # Retourne la somme des valeurs d'un Tableau
-  # contenant des Numériques.
-  Variables i, s en Entier
-  s <- 0
-  Pour i <- 0 à Taille(T) - 1
+  Variable s en Quelconque
+  s <- T[0]
+  Pour i <- 1 à Taille(T) - 1
     s <- s + T[i]
   i Suivant
   Retourne s
@@ -367,34 +355,8 @@ Fonction Compte(T[] en Quelconque, valeur en Quelconque) en Entier
   Retourne c
 FinFonction
 
-Fonction CompteEnt(T[] en Entier, valeur en Entier) en Entier
-  # Retourne le nombre d'occurences d'une valeur de type Entier
-  # se trouvant dans un Tableau
-  Variables c, i en Entier
-  c <- 0
-  Pour i <- 0 à Taille(T) - 1
-    Si T[i] = valeur Alors
-      c <- c + 1
-    FinSi
-  i Suivant
-  Retourne c
-FinFonction
-
-Fonction CompteCh(T[] en Chaîne, valeur en Chaîne) en Entier
-  # Retourne le nombre d'occurences d'une valeur de type Chaîne
-  # se trouvant dans un Tableau
-  Variables c, i en Entier
-  c <- 0
-  Pour i <- 0 à Taille(T) - 1
-    Si T[i] = valeur Alors
-      c <- c + 1
-    FinSi
-  i Suivant
-  Retourne c
-FinFonction
-
 Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
-  # Retourne l'index d'une valeur dans un Tableau.
+  # Retourne le premier index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
   Variable i en Entier
   Pour i <- 0 à Taille(T) - 1
@@ -405,39 +367,39 @@ Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
   Retourne -1
 FinFonction
 
-Fonction MaxNum(a, b en Numérique) en Numérique
+Fonction Max(a, b en Quelconque) en Quelconque
   Si a > b Alors
     Retourne a
   FinSi
   Retourne b
 FinFonction
 
-Fonction MaxEnt(a, b en Entier) en Entier
-  Si a > b Alors
+Fonction Min(a, b en Quelconque) en Quelconque
+  Si a < b Alors
     Retourne a
   FinSi
   Retourne b
 FinFonction
 
-Fonction TMaxNum(T[] en Numérique) en Numérique
+Fonction TMax(T[] en Quelconque) en Quelconque
   Variable i en Entier
-  Variable n en Numérique
+  Variable n en Quelconque
   n <- T[0]
   Pour i <- 1 à Taille(T) - 1
-    Si n > T[i] Alors
-      n = T[i]
+    Si T[i] > n Alors
+      n <- T[i]
     FinSi
   i Suivant
   Retourne n
 FinFonction
 
-Fonction TMaxEnt(T[] en Entier) en Entier
+Fonction TMin(T[] en Quelconque) en Quelconque
   Variable i en Entier
-  Variable n en Entier
+  Variable n en Quelconque
   n <- T[0]
   Pour i <- 1 à Taille(T) - 1
-    Si n > T[i] Alors
-      n = T[i]
+    Si T[i] < n Alors
+      n <- T[i]
     FinSi
   i Suivant
   Retourne n
