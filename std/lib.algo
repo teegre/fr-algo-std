@@ -276,25 +276,6 @@ Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
   elements[index] <- chaine
 FinProcédure
 
-Fonction Index(valeur en Chaîne, T[] en Chaîne, casse en Booléen) en Entier
-  Variable i en Entier
-  Variables v1, v2 en Chaîne
-  Si NON(casse) Alors
-    v2 <- Minus(valeur)
-  Sinon
-    v2 <- valeur
-  FinSi
-  Pour i <- 0 à Taille(T) - 1
-    Si NON(casse) Alors
-      v1 <- Minus(T[i])
-    FinSi
-    Si v1 = v2 Alors
-      Retourne i
-    FinSi
-  i Suivant
-  Retourne -1
-FinFonction
-
 Fonction Arrondir(n en Numérique, p en Entier) en Numérique
   # Arrondit un Numérique `n` selon un nombre de chiffre après la virgule `p`.
   Variables t, i, f en Chaîne
@@ -355,12 +336,25 @@ Fonction Compte(T[] en Quelconque, valeur en Quelconque) en Entier
   Retourne c
 FinFonction
 
-Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
+Fonction Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en Entier
   # Retourne le premier index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
   Variable i en Entier
+  Variables v1, v2 en Chaîne
+  Si NON(casse) ET Type(valeur) = "Chaîne" Alors
+    v2 <- Minus(valeur)
+  Sinon
+    v2 <- valeur
+  FinSi
   Pour i <- 0 à Taille(T) - 1
-    Si T[i] = valeur Alors
+    Si NON(casse) ET Type(valeur) = "Chaîne" Alors
+      v1 <- Minus(T[i])
+    FinSi
+    Si Type(valeur) = "Chaîne" Alors
+      Si v1 = v2 Alors
+        Retourne i
+      FinSi
+    SinonSi T[i] = valeur Alors
       Retourne i
     FinSi
   i Suivant
