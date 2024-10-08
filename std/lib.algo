@@ -340,21 +340,24 @@ Fonction Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en En
   # Retourne le premier index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
   Variable i en Entier
-  Variables v1, v2 en Chaîne
-  Si NON(casse) ET Type(valeur) = "Chaîne" Alors
+  Variables v1, v2 en Quelconque
+  Variables C1, C2 en Booléen
+
+  C2 <- Type(valeur) = "Chaîne"
+  C1 ← NON(casse) ET C2
+
+  Si C1 Alors
     v2 <- Minus(valeur)
   Sinon
     v2 <- valeur
   FinSi
   Pour i <- 0 à Taille(T) - 1
-    Si NON(casse) ET Type(valeur) = "Chaîne" Alors
+    Si C1 Alors
       v1 <- Minus(T[i])
+    Sinon
+      v1 <- T[i]
     FinSi
-    Si Type(valeur) = "Chaîne" Alors
-      Si v1 = v2 Alors
-        Retourne i
-      FinSi
-    SinonSi T[i] = valeur Alors
+    Si v1 = v2 Alors
       Retourne i
     FinSi
   i Suivant
