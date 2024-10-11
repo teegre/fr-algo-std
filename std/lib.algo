@@ -4,7 +4,7 @@ Librairie
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
 #########################################
 
-Fonction EstAlpha(c en Caractère) en Booléen
+Fonction ___EstAlpha(c en Caractère) en Booléen
   # Retourne VRAI si `c` est un caractère alphabétique.
   Variable réponse en Booléen
 
@@ -18,12 +18,12 @@ Fonction EstAlpha(c en Caractère) en Booléen
   Retourne réponse
 FinFonction
 
-Fonction EstNum(c en Caractère) en Booléen
+Fonction ___EstNum(c en Caractère) en Booléen
   # Retourne VRAI si  `c` est un caractère numérique..
   Retourne (CodeCar(c) > 47) ET (CodeCar(c) < 58)
 FinFonction
 
-Fonction ChEstNum(chaîne en Chaîne) en Booléen
+Fonction EstNum(chaîne en Chaîne) en Booléen
   # Retourne VRAI si `chaîne` ne contient que des chiffres.
   Variable i en Entier
   Variable c en Caractère
@@ -33,13 +33,32 @@ Fonction ChEstNum(chaîne en Chaîne) en Booléen
 
   Pour i <- 1 à Longueur(chaîne)
     c <- Extraire(chaîne, i, 1)
-    réponse <- réponse ET EstNum(c)
+    réponse <- réponse ET ___EstNum(c)
     Si NON(réponse) Alors
       Retourne FAUX
     FinSi
   i Suivant
 
   Retourne réponse
+FinFonction
+
+Fonction EstAlpha(ch en Chaîne) en Booléen
+  # Retourne vrai si `ch` ne contient que des caractères alphabétiques.
+  Variable i en Entier
+  Variable c en Caractère
+  Variable r en Booléen
+
+  r <- VRAI
+
+  Pour i <- 1 à Longueur(ch)
+    c <- Extraire(ch, i, 1)
+    r <- r ET ___EstAlpha(c)
+    Si NON(r) Alors
+      Retourne FAUX
+    FinSi
+  i Suivant
+
+  Retourne r
 FinFonction
 
 Fonction Majus(ch en Chaîne) en Chaîne
@@ -53,7 +72,7 @@ Fonction Majus(ch en Chaîne) en Chaîne
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    condition <- EstAlpha(c)
+    condition <- ___EstAlpha(c)
     condition <- condition ET ((CodeCar(c) >  96) ET (CodeCar(c) < 123))
     condition <- condition OU ((CodeCar(c) > 223) ET (CodeCar(c) < 254))
     Si condition Alors
@@ -77,7 +96,7 @@ Fonction Minus(ch en Chaîne) en Chaîne
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    condition <- EstAlpha(c)
+    condition <- ___EstAlpha(c)
     condition <- condition ET ((CodeCar(c) >  64) ET (CodeCar(c) <  91))
     condition <- condition OU ((CodeCar(c) > 191) ET (CodeCar(c) < 222))
     Si condition Alors
@@ -402,7 +421,7 @@ Fonction TMin(T[] en Quelconque) en Quelconque
   Retourne n
 FinFonction
 
-Procédure Tri(&T[] en Quelconque, croissant en Booléen)
+Procédure ___TriTableau(&T[] en Quelconque, croissant en Booléen)
   Variable temp en Quelconque
   Variable i en Entier
   Variables y, x en Booléen
@@ -425,3 +444,39 @@ Procédure Tri(&T[] en Quelconque, croissant en Booléen)
   FinTantQue
 FinProcédure
 
+Procédure Trier(&T[] en Quelconque)
+  ___TriTableau(T, VRAI)
+FinProcédure
+
+Procédure Inverser(&T[] en Quelconque)
+  ___TriTableau(T, FAUX)
+FinProcédure
+
+Procédure ___InitTableau(&T[] en Quelconque, valeur en Quelconque)
+  Variable i en Entier
+  Pour i <- 0 à Taille(T) - 1
+    T[i] <- valeur
+  i Suivant
+FinProcédure
+
+Procédure Mélanger(&T[] en Quelconque)
+  Tableau COMPTEUR[] en Entier
+  Tableau TEMP[] en Quelconque
+  Variables i, idx en Entier
+
+  Redim COMPTEUR[Taille(T) - 1]
+  Redim TEMP[Taille(T) - 1]
+  ___InitTableau(COMPTEUR, 0)
+  i <- 0
+
+  TantQue (Somme(COMPTEUR) < Taille(T))
+    idx <- Entier(Aléa() * Taille(T))
+    Si COMPTEUR[idx] = 0 Alors
+      TEMP[i] <- T[idx]
+      COMPTEUR[idx] <- 1
+      i <- i + 1
+    FinSi
+  FinTantQue
+
+  T <- TEMP
+FinProcédure
