@@ -23,7 +23,7 @@ Fonction ___EstNum(c en Caractère) en Booléen
   Retourne (CodeCar(c) > 47) ET (CodeCar(c) < 58)
 FinFonction
 
-Fonction EstNum(chaîne en Chaîne) en Booléen
+Fonction EstNum(ch en Chaîne) en Booléen
   # Retourne VRAI si `chaîne` ne contient que des chiffres.
   Variable i en Entier
   Variable c en Caractère
@@ -31,8 +31,8 @@ Fonction EstNum(chaîne en Chaîne) en Booléen
 
   réponse <- VRAI
 
-  Pour i <- 1 à Longueur(chaîne)
-    c <- Extraire(chaîne, i, 1)
+  Pour i <- 1 à Longueur(ch)
+    c <- Extraire(ch, i, 1)
     réponse <- réponse ET ___EstNum(c)
     Si NON(réponse) Alors
       Retourne FAUX
