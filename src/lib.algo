@@ -1,5 +1,7 @@
 Librairie
 
+Constante PI 3.141592653589793
+
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
 #########################################
@@ -109,6 +111,27 @@ Fonction Minus(ch en Chaîne) en Chaîne
   Retourne résultat
 FinFonction
 
+Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
+  # Scinde une chaine de caractères en éléments d'un tableau
+  # selon un séparateur.
+  Variable sous_chaine en Chaîne
+  Variable index en Entier
+
+  index <- -1
+
+  TantQue Trouve(chaine, separateur) > 0
+    sous_chaine <- Gauche(chaine, Trouve(chaine, separateur) - 1)
+    index <- index + 1
+    Redim elements[index]
+    elements[index] <- sous_chaine
+    chaine <- Droite(chaine, Longueur(chaine) - Trouve(chaine, separateur))
+  FinTantQue
+
+  index <- index + 1
+  Redim elements[index]
+  elements[index] <- chaine
+FinProcédure
+
 Fonction CommencePar(ch, v en Chaîne) en Booléen
   Retourne Gauche(ch, Longueur(v)) = v
 FinFonction
@@ -117,117 +140,9 @@ Fonction FinitPar(ch, v en Chaîne) en Booléen
   Retourne Droite(ch, Longueur(v)) = v
 FinFonction
 
-###########################################
-# UTILITAIRES POUR MODIFIER DES ATTRIBUTS
-# DES CARACTÈRES AFFICHÉS DANS UN TERMINAL
-###########################################
-
-# NOTE: les attributs du texte sont automatiquement remis à zéro
-# après utilisation lors d'une utilisation dans un environnement interactif.
-
-Fonction rvb(r, v, b en Entier) en Chaîne
-  # Retourne un code pour le terminal qui
-  # change la couleur du texte.
-  Variable code en Chaîne
-  code <- "\033[38;2;"
-  code <- code & Chaîne(r) & ";"
-  code <- code & Chaîne(v) & ";"
-  code <- code & Chaîne(b) & "m"
-  Retourne code
+Fonction Contient(ch, v en Chaîne) en Booléen
+  Retourne Trouve(ch, v) > 0
 FinFonction
-
-Fonction frvb(r, v, b en Entier) en Chaîne
-  # Retourne un code pour le terminal qui
-  # change la couleur du fond.
-  Variable code en Chaîne
-  code <- "\033[48;2;"
-  code <- code & Chaîne(r) & ";"
-  code <- code & Chaîne(v) & ";"
-  code <- code & Chaîne(b) & "m"
-  Retourne code
-FinFonction
-
-Fonction attr(a en Chaîne) en Chaîne
-  # Retourne un code pour le terminal qui
-  # change un attribut du texte :
-  # gr(as) at(tenué) it(alique) so(uligné) cl(ignotant) in(verse)
-  Si a = "gr" Alors
-    Retourne "\033[1m"
-  SinonSi a = "at" Alors
-    Retourne "\033[2m"
-  SinonSi a = "it" Alors
-    Retourne "\033[3m"
-  SinonSi a = "so" Alors
-    Retourne "\033[4m"
-  SinonSi a = "cl" Alors
-    Retourne "\033[5m"
-  SinonSi a = "in" Alors
-    Retourne "\033[7m"
-  FinSi
-  Retourne ""
-FinFonction
-
-Fonction fina() en Chaîne
-  # Annule tous les attributs/couleurs en cours.
-  Retourne "\033[0m"
-FinFonction
-
-Procédure efface_ecran()
-  Ecrire "\033[2J\033[H" \
-FinProcédure
-
-Procédure pos_curseur(lgn, col en Entier)
-  # Positionne le curseur : lgn (ligne) et col (colonne).
-  Ecrire "\033[" & Chaîne(lgn) & ";" & Chaîne(col) & "H" \
-FinProcédure
-
-Procédure pos_ecrire(lgn, col en Entier, texte en Chaîne)
-  # Ecrit le texte à la position donnée.
-  pos_curseur(lgn, col)
-  Ecrire texte \
-FinProcédure
-
-Procédure pos_col(col en Entier)
-  Ecrire "\033[" & Chaîne(col) & "G" \
-FinProcédure
-
-Procédure efface_fdl()
-  # Efface depuis la position du curseur jusqu'à la fin de la ligne.
-  Ecrire "\033[K" \
-FinProcédure
-
-Procédure efface_bde()
-  # Efface depuis la position du curseur jusqu'au bas de l'écran.
-  Ecrire "\033[0J" \
-FinProcédure
-
-Procédure efface_ligne()
-  # Efface la ligne à la position du curseur.
-  Ecrire "\033[2K" \
-FinProcédure
-
-Procédure cache_curseur()
-  Ecrire "\033[?25l" \
-FinProcédure
-
-Procédure montre_curseur()
-  Ecrire "\033[?25h" \
-FinProcédure
-
-Procédure sauve_curseur()
-  # Enregistre la position du curseur.
-  Ecrire "\033[s" \
-FinProcédure
-
-Procédure restaure_curseur()
-  # Restaure la position du curseur enregistée precédemment.
-  Ecrire "\033[u" \
-FinProcédure
-
-Procédure reinit()
-  # Réinitialise les attributs du terminal.
-  Ecrire "\033[21m\033[22m\033[23m\033[24m\033[25m\033[27m"
-FinProcédure
 
 #####################
 # AUTRES UTILITAIRES
@@ -274,38 +189,48 @@ Fonction Base10(nombre en Quelconque, base en Entier) en Entier
   Retourne resultat
 FinFonction
 
-Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
-  # Scinde une chaine de caractères en éléments d'un tableau
-  # selon un séparateur.
-  Variable sous_chaine en Chaîne
-  Variable index en Entier
-
-  index <- -1
-
-  TantQue Trouve(chaine, separateur) > 0
-    sous_chaine <- Gauche(chaine, Trouve(chaine, separateur) - 1)
-    index <- index + 1
-    Redim elements[index]
-    elements[index] <- sous_chaine
-    chaine <- Droite(chaine, Longueur(chaine) - Trouve(chaine, separateur))
-  FinTantQue
-
-  index <- index + 1
-  Redim elements[index]
-  elements[index] <- chaine
-FinProcédure
+Fonction Abs(n en Quelconque) en Quelconque
+  # Retourne la valeur absolue de `n`.
+  Si Type(n) <> "Entier" ET Type(n) <> "Numérique" Alors
+    Panique "Abs : type `Entier` ou `Numérique` attendu !"
+  FinSi
+  Si n < 0 Alors
+    Retourne -n
+  FinSi
+  Retourne n
+FinFonction
 
 Fonction Arrondir(n en Numérique, p en Entier) en Numérique
-  # Arrondit un Numérique `n` selon un nombre de chiffre après la virgule `p`.
-  Variables t, i, f en Chaîne
+  # Arrondit un Numérique `n` selon un nombre de chiffres après la virgule `p`.
+  Variables t, g, d en Chaîne
+  Variables L, a en Entier
+
+  Si p <= 0 Alors
+    p <- 1
+  FinSi
+
   t <- Chaîne(n)
-  i <- Extraire(t, 1, Trouve(t, "."))
-  f <- Extraire(t, Trouve(t, ".") + 1, p)
-  Retourne Numérique(i & f)
+  g <- Extraire(t, 1, Trouve(t, "."))
+  L <- Longueur(t) - Longueur(g)
+  d <- Extraire(t, Longueur(g) + 1, L)
+
+  Si p >= L Alors
+    Retourne n
+  FinSi
+
+  a <-  Entier(Extraire(d, p + 1, 1))
+
+  Si a >= 5 Alors
+    d <- Chaîne(Entier(Extraire(d, 1, p)) + 1)
+  Sinon
+    d <- Extraire(d, 1, p)
+  FinSi
+
+  Retourne Numérique(g & d)
 FinFonction
 
 Fonction AléaP(poids[] en Numérique) en Entier
-  # Retourne un en entier aléatoire
+  # Retourne un entier aléatoire
   # entre 0 et Taille(poids) - 1 (inclus)
   # selon une liste de poids donnée en paramètre.
   Variables s, r en Numérique
@@ -331,10 +256,33 @@ Fonction AléaP(poids[] en Numérique) en Entier
   Retourne Taille(poids) - 1
 FinFonction
 
+Fonction Max(a, b en Quelconque) en Quelconque
+  # Retourne la plus grande des deux valeurs.
+  Si a > b Alors
+    Retourne a
+  FinSi
+  Retourne b
+FinFonction
+
+Fonction Min(a, b en Quelconque) en Quelconque
+  # Retourne la plus petite des deux valeurs.
+  Si a < b Alors
+    Retourne a
+  FinSi
+  Retourne b
+FinFonction
+
+############################
+# UTILITAIRES POUR TABLEAUX
+############################
+
 Fonction Somme(T[] en Quelconque) en Quelconque
   # Retourne la somme des valeurs d'un Tableau.
   Variable i en Entier
   Variable s en Quelconque
+  Si Type(T[0]) <> "Entier" ET Type(T[0]) <> "Numérique" Alors
+    Panique "Somme : type `Entier` ou `Numérique` attendu [", Type(T[0]), "]"
+  FinSi
   s <- T[0]
   Pour i <- 1 à Taille(T) - 1
     s <- s + T[i]
@@ -342,7 +290,7 @@ Fonction Somme(T[] en Quelconque) en Quelconque
   Retourne s
 FinFonction
 
-Fonction Compte(T[] en Quelconque, valeur en Quelconque) en Entier
+Fonction Compter(T[] en Quelconque, valeur en Quelconque) en Entier
   # Retourne le nombre d'occurences d'une valeur
   # se trouvant dans un Tableau
   Variables c, i en Entier
@@ -355,21 +303,24 @@ Fonction Compte(T[] en Quelconque, valeur en Quelconque) en Entier
   Retourne c
 FinFonction
 
-Fonction Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en Entier
+Fonction ___Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en Entier
   # Retourne le premier index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
+  # Si le paramètre `casse` est VRAI, la recherche est 
+  # sensible à la casse (type `Chaîne` uniquement).
   Variable i en Entier
   Variables v1, v2 en Quelconque
   Variables C1, C2 en Booléen
 
   C2 <- Type(valeur) = "Chaîne"
-  C1 ← NON(casse) ET C2
+  C1 <- NON(casse) ET C2
 
   Si C1 Alors
     v2 <- Minus(valeur)
   Sinon
     v2 <- valeur
   FinSi
+
   Pour i <- 0 à Taille(T) - 1
     Si C1 Alors
       v1 <- Minus(T[i])
@@ -380,24 +331,20 @@ Fonction Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en En
       Retourne i
     FinSi
   i Suivant
+
   Retourne -1
 FinFonction
 
-Fonction Max(a, b en Quelconque) en Quelconque
-  Si a > b Alors
-    Retourne a
-  FinSi
-  Retourne b
+Fonction IndexSC(T[] en Chaîne, valeur en Chaîne) en Entier
+  Retourne ___Index(T, valeur, VRAI)
 FinFonction
 
-Fonction Min(a, b en Quelconque) en Quelconque
-  Si a < b Alors
-    Retourne a
-  FinSi
-  Retourne b
+Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
+  Retourne ___Index(T, valeur, FAUX)
 FinFonction
 
 Fonction TMax(T[] en Quelconque) en Quelconque
+  # Retourne la plus grande valeur d'un tableau.
   Variable i en Entier
   Variable n en Quelconque
   n <- T[0]
@@ -410,6 +357,7 @@ Fonction TMax(T[] en Quelconque) en Quelconque
 FinFonction
 
 Fonction TMin(T[] en Quelconque) en Quelconque
+  # Retourne la plus petite valeur d'un tableau.
   Variable i en Entier
   Variable n en Quelconque
   n <- T[0]
@@ -421,35 +369,115 @@ Fonction TMin(T[] en Quelconque) en Quelconque
   Retourne n
 FinFonction
 
-Procédure ___TriTableau(&T[] en Quelconque, croissant en Booléen)
+Fonction TLongueur(T[] en Quelconque) en Entier
+  # Retourne le nombre d'éléments dans une liste
+  Variables c, i en Entier
+  c <- 0
+  Pour i <- 0 à Taille(T) - 1
+    Si T[i] Alors
+      c <- c + 1
+    FinSi
+  i Suivant
+  Retourne c
+FinFonction
+
+Procédure Trancher(T[] en Quelconque, idx1, idx2 en Entier, &U[] en Quelconque)
+  # Copie les élements de `idx1` à `idx2` d'un Tableau `T` dans un Tableau `U`.
+  Variables min, max, i en Entier
+
+  Si TLongueur(T) = 0 Alors
+    Panique "Trancher : impossible de trancher un tableau vide"
+  FinSi
+
+  min <- Min(idx1, idx2)
+  max <- Max(idx1, idx2)
+
+  Si min < 0 Alors
+    Panique "Trancher : index invalide", min
+  FinSi
+
+  Redim U[max - min]
+
+  Si max > TLongueur(T) - 1 Alors
+    Panique "Trancher : index invalide", max
+  FinSi
+
+  Pour i <- min à max
+    U[Abs(i - min)] <- T[i]
+  i Suivant
+FinProcédure
+
+Procédure ___Echanger(&T[] en Quelconque, index1, index2 en Entier)
   Variable temp en Quelconque
+  temp <- T[index1]
+  T[index1] <- T[index2]
+  T[index2] <- temp
+FinProcédure
+
+Procédure Insérer(&T[] en Quelconque, valeur en Quelconque, index en Entier)
+  # Insère une valeur dans un tableau à l'index donné.
   Variable i en Entier
-  Variables y, x en Booléen
-  y ← VRAI
-  TantQue y
-    y ← FAUX
-    Pour i ← 0 à Taille(T) - 2
-      Si croissant Alors
-        x <- T[i] > T[i+1]
-      Sinon
-        x <- T[i] < T[i+1]
-      FinSi
-      Si x Alors
-        temp ← T[i]
-        T[i] ← T[i+1]
-        T[i+1] ← temp
-        y ← VRAI
-      FinSi
-    i Suivant
-  FinTantQue
+
+  Redim T[Taille(T)]
+
+  T[Taille(T) - 1] <- valeur
+  Pour i <- Taille(T) - 2 à index Pas -1
+    ___Echanger(T, i, i + 1)
+  i Suivant
+FinProcédure
+
+Procédure Supprimer(&T[] en Quelconque, index en Entier)
+  # Supprime l'élement d'une liste à l'index donné.
+  Variable i en Entier
+
+  Pour i <- index à Taille(T) - 2
+    ___Echanger(T, i, i + 1)
+  i Suivant
+  Redim T[Taille(T) - 2]
+FinProcédure
+
+Fonction ___Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Booléen) en Entier
+  Variable pivot en Quelconque
+  Variables i, j en Entier
+  Variable ordre en Booléen
+
+  pivot <- T[max]
+  i <- min
+
+  Pour j <- min à max - 1
+    Si croissant Alors
+      ordre <- T[j] <= pivot
+    Sinon
+      ordre <- T[j] >= pivot
+    FinSi
+    Si ordre Alors
+      ___Echanger(T, i, j)
+      i <- i + 1
+    FinSi
+  j Suivant
+
+  ___Echanger(T, i, max)
+  Retourne i
+FinFonction
+
+Procédure ___Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Booléen)
+  Variable p en Entier
+
+  Si min >= max OU max < 0 Alors
+    Terminer
+  FinSi
+
+  p <- ___Partitionner(T, min, max, croissant)
+  ___Quicksort(T, min, p - 1, croissant)
+  ___Quicksort(T, p + 1, max, croissant)
 FinProcédure
 
 Procédure Trier(&T[] en Quelconque)
-  ___TriTableau(T, VRAI)
+  ___Quicksort(T, 0, Taille(T) - 1, VRAI)
 FinProcédure
 
 Procédure Inverser(&T[] en Quelconque)
-  ___TriTableau(T, FAUX)
+  ___Quicksort(T, 0, Taille(T) - 1, FAUX)
 FinProcédure
 
 Procédure ___InitTableau(&T[] en Quelconque, valeur en Quelconque)
@@ -469,7 +497,7 @@ Procédure Mélanger(&T[] en Quelconque)
   ___InitTableau(COMPTEUR, 0)
   i <- 0
 
-  TantQue (Somme(COMPTEUR) < Taille(T))
+  TantQue Somme(COMPTEUR) < Taille(T)
     idx <- Entier(Aléa() * Taille(T))
     Si COMPTEUR[idx] = 0 Alors
       TEMP[i] <- T[idx]
@@ -479,4 +507,41 @@ Procédure Mélanger(&T[] en Quelconque)
   FinTantQue
 
   T <- TEMP
+FinProcédure
+
+Fonction TContient(T[] en Quelconque, v en Quelconque) en Booléen
+  Variables d, f en Entier
+
+  d <- 0
+  f <- Taille(T) - 1
+
+  TantQue d < f + 1
+    Si T[d] = v OU T[f] = v Alors
+      Retourne VRAI
+    FinSi
+    d <- d + 1
+    f <- f - 1
+  FinTantQue
+  Retourne FAUX
+FinFonction
+
+Procédure Grouper(T[] en Quelconque, &G[] en Quelconque)
+  # Groupe les valeurs d'un tableau T dans un tableau G.
+  # Ex : [1, 2, 2, 1, 3] → [1, 2, 3]
+  Table groupe
+    Clef en Chaîne
+    Valeur en Entier
+  FinTable
+
+  Variable i en Entier
+  Variable e en Chaîne
+
+  Pour i <- 0 à Taille(T) - 1
+    e <- Chaîne(T[i])
+    Si NON(Existe(groupe, e)) Alors
+      groupe[e] <- 1
+      Redim G[Taille(Clefs(groupe)) - 1]
+      G[Taille(G) - 1] <- T[i]
+    FinSi
+  i Suivant
 FinProcédure
