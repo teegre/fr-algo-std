@@ -1,8 +1,8 @@
 Librairie
 
+Constante ___STDLIB_AUTEUR "Stéphane MEYER (Teegre)"
 Constante ___STDLIB_VERSION  "0.0.1"
 Constante ___STDLIB_DATE_MOD "2024/10/16"
-Constante ___STDLIB_AUTEUR "Stéphane MEYER (Teegre)"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
@@ -126,6 +126,10 @@ Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
   Variable sous_chaine en Chaîne
   Variable index en Entier
 
+  Si NON(separateur) Alors
+    Panique "Le séparateur ne doit pas être une Chaîne vide."
+  FinSi
+
   index <- -1
 
   TantQue Trouve(chaine, separateur) > 0
@@ -139,6 +143,17 @@ Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
   index <- index + 1
   Redim elements[index]
   elements[index] <- chaine
+FinProcédure
+
+Procédure Séparer(chaîne, &elements[] en Chaîne)
+  # Teegre :
+  # Place chaque caractère d'une chaîne dans un Tableau.
+  Variable i en Entier
+
+  Redim elements[Longueur(chaîne) - 1]
+  Pour i <- 1 à Longueur(chaîne)
+    elements[i - 1] <- Extraire(chaîne, i, 1)
+  i Suivant
 FinProcédure
 
 Fonction CommencePar(ch, v en Chaîne) en Booléen
@@ -475,7 +490,7 @@ Fonction Pop(&T[] en Quelconque) en Quelconque
   # Teegre :
   # Efface le dernier élément d'un Tableau et retourne sa valeur.
   Variable e en Quelconque
-  
+
   e <- T[Taille(T) - 1]
   Redim T[Taille(T) - 2]
   Retourne e
@@ -527,10 +542,24 @@ Procédure Trier(&T[] en Quelconque)
   ___Quicksort(T, 0, Taille(T) - 1, VRAI)
 FinProcédure
 
-Procédure Inverser(&T[] en Quelconque)
+Procédure TrierD(&T[] en Quelconque)
   # Teegre :
   # Trie un Tableau dans l'ordre décroissant.
   ___Quicksort(T, 0, Taille(T) - 1, FAUX)
+FinProcédure
+
+Procédure Inverser(&T[] en Quelconque)
+  # Teegre :
+  # Inverse les valeurs d'un Tableau.
+  Variables i, j en Entier
+
+  i <- 0
+  j <- Taille(T) - 1
+
+  Pour i <- 0 à (Taille(T) - 1) / 2
+    ___Echanger(T, i, j)
+    j <- j - 1
+  i Suivant
 FinProcédure
 
 Procédure ___InitTableau(&T[] en Quelconque, valeur en Quelconque)
@@ -603,6 +632,34 @@ Procédure Grouper(T[] en Quelconque, &G[] en Quelconque)
       groupe[e] <- 1
       Redim G[Taille(Clefs(groupe)) - 1]
       G[Taille(G) - 1] <- T[i]
+    FinSi
+  i Suivant
+FinProcédure
+
+Procédure TConvertir(source[] en Quelconque, &cible[] en Quelconque)
+  # Teegre :
+  # Copie vers `cible` toutes les valeurs de `source` et les convertit
+  # dans le type de données attribué à `cible`.
+  # NOTE: Ne fonctionne pas pour si le Tableau `cible` est supposé
+  # contenir un type Structure.
+  Variable i en Entier
+  Variable type en Chaîne
+
+  type <- Type(cible)
+
+  Redim cible[Taille(source) - 1]
+
+  Pour i <- 0 à Taille(source) - 1
+    Si FinitPar(type, "Entier") Alors
+      cible[i] <- Entier(source[i])
+    SinonSi FinitPar(type, "Numérique") Alors
+      cible[i] <- Numérique(source[i])
+    SinonSi Contient(type, "Caractère") OU FinitPar(type, "Chaîne") Alors
+      cible[i] <- Chaîne(source[i])
+    SinonSi FinitPar(type, "Booléen") Alors
+      cible[i] <- Booléen(source[i])
+    Sinon
+      Panique "Type `" & type & "` non supporté."
     FinSi
   i Suivant
 FinProcédure
