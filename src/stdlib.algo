@@ -413,25 +413,12 @@ Fonction TMin(T[] en Quelconque) en Quelconque
   Retourne n
 FinFonction
 
-Fonction TLongueur(T[] en Quelconque) en Entier
-  # Teegre :
-  # Retourne le nombre d'éléments dans un Tableau.
-  Variables c, i en Entier
-  c <- 0
-  Pour i <- 0 à Taille(T) - 1
-    Si T[i] Alors
-      c <- c + 1
-    FinSi
-  i Suivant
-  Retourne c
-FinFonction
-
 Procédure Trancher(T[] en Quelconque, idx1, idx2 en Entier, &U[] en Quelconque)
   # Teegre :
   # Copie les élements de `idx1` à `idx2` d'un Tableau `T` vers un Tableau `U`.
   Variables min, max, i en Entier
 
-  Si TLongueur(T) = 0 Alors
+  Si Longueur(T) = 0 Alors
     Panique "Trancher : impossible de trancher un tableau vide"
   FinSi
 
