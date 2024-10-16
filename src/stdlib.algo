@@ -1,12 +1,15 @@
 Librairie
 
-Constante PI 3.141592653589793
+Constante ___STDLIB_VERSION  "0.0.1"
+Constante ___STDLIB_DATE_MOD "2024/10/16"
+Constante ___STDLIB_AUTEUR "Stéphane MEYER (Teegre)"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
 #########################################
 
 Fonction ___EstAlpha(c en Caractère) en Booléen
+  # Teegre :
   # Retourne VRAI si `c` est un caractère alphabétique.
   Variable réponse en Booléen
 
@@ -21,11 +24,13 @@ Fonction ___EstAlpha(c en Caractère) en Booléen
 FinFonction
 
 Fonction ___EstNum(c en Caractère) en Booléen
+  # Teegre :
   # Retourne VRAI si  `c` est un caractère numérique..
   Retourne (CodeCar(c) > 47) ET (CodeCar(c) < 58)
 FinFonction
 
 Fonction EstNum(ch en Chaîne) en Booléen
+  # Teegre :
   # Retourne VRAI si `chaîne` ne contient que des chiffres.
   Variable i en Entier
   Variable c en Caractère
@@ -45,6 +50,7 @@ Fonction EstNum(ch en Chaîne) en Booléen
 FinFonction
 
 Fonction EstAlpha(ch en Chaîne) en Booléen
+  # Teegre :
   # Retourne vrai si `ch` ne contient que des caractères alphabétiques.
   Variable i en Entier
   Variable c en Caractère
@@ -64,6 +70,7 @@ Fonction EstAlpha(ch en Chaîne) en Booléen
 FinFonction
 
 Fonction Majus(ch en Chaîne) en Chaîne
+  # Teegre :
   # Convertit une chaîne de caractères en majuscules.
   Variable i en Entier
   Variable résultat en Chaîne
@@ -88,6 +95,7 @@ Fonction Majus(ch en Chaîne) en Chaîne
 FinFonction
 
 Fonction Minus(ch en Chaîne) en Chaîne
+  # Teegre :
   # Convertit une chaîne de caractères en minuscules.
   Variable i en Entier
   Variable résultat en Chaîne
@@ -112,6 +120,7 @@ Fonction Minus(ch en Chaîne) en Chaîne
 FinFonction
 
 Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
+  # Teegre :
   # Scinde une chaine de caractères en éléments d'un tableau
   # selon un séparateur.
   Variable sous_chaine en Chaîne
@@ -133,14 +142,17 @@ Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
 FinProcédure
 
 Fonction CommencePar(ch, v en Chaîne) en Booléen
+  # Teegre :
   Retourne Gauche(ch, Longueur(v)) = v
 FinFonction
 
 Fonction FinitPar(ch, v en Chaîne) en Booléen
+  # Teegre :
   Retourne Droite(ch, Longueur(v)) = v
 FinFonction
 
 Fonction Contient(ch, v en Chaîne) en Booléen
+  # Teegre :
   Retourne Trouve(ch, v) > 0
 FinFonction
 
@@ -149,6 +161,8 @@ FinFonction
 #####################
 
 Fonction Base(nombre, base en Entier) en Chaîne
+  # Teegre :
+  # Convertit un nombre décimal en son équivalent en base `base`.
   Variables caracteres, resultat en Chaîne
   Si base < 2 OU base > 36 Alors
     Retourne "-1"
@@ -166,11 +180,13 @@ Fonction Base(nombre, base en Entier) en Chaîne
 FinFonction
 
 Fonction Base10(nombre en Quelconque, base en Entier) en Entier
+  # Teegre :
+  # Convertit un nombre en base `base` en son équivalent décimal.
   Variables param, caracteres en Chaîne
   Variables index, car_index, resultat en Entier
   param <- Chaîne(nombre)
   Si base < 2 OU base > 36 Alors
-    Ecrire "Erreur : base invalide >", base, "< [2-36]"
+    EcrireErr "Erreur : base invalide >", base, "< [2-36]"
     Retourne -1
   FinSi
   Si param = "0" Alors
@@ -190,6 +206,7 @@ Fonction Base10(nombre en Quelconque, base en Entier) en Entier
 FinFonction
 
 Fonction Abs(n en Quelconque) en Quelconque
+  # Teegre :
   # Retourne la valeur absolue de `n`.
   Si Type(n) <> "Entier" ET Type(n) <> "Numérique" Alors
     Panique "Abs : type `Entier` ou `Numérique` attendu !"
@@ -201,6 +218,8 @@ Fonction Abs(n en Quelconque) en Quelconque
 FinFonction
 
 Fonction Arrondir(n en Numérique, p en Entier) en Numérique
+  # Teegre :
+  # TODO: A refaire en utilisant uniquement des types numériques.
   # Arrondit un Numérique `n` selon un nombre de chiffres après la virgule `p`.
   Variables t, g, d en Chaîne
   Variables L, a en Entier
@@ -230,6 +249,7 @@ Fonction Arrondir(n en Numérique, p en Entier) en Numérique
 FinFonction
 
 Fonction AléaP(poids[] en Numérique) en Entier
+  # Teegre :
   # Retourne un entier aléatoire
   # entre 0 et Taille(poids) - 1 (inclus)
   # selon une liste de poids donnée en paramètre.
@@ -257,6 +277,7 @@ Fonction AléaP(poids[] en Numérique) en Entier
 FinFonction
 
 Fonction Max(a, b en Quelconque) en Quelconque
+  # Teegre :
   # Retourne la plus grande des deux valeurs.
   Si a > b Alors
     Retourne a
@@ -265,6 +286,7 @@ Fonction Max(a, b en Quelconque) en Quelconque
 FinFonction
 
 Fonction Min(a, b en Quelconque) en Quelconque
+  # Teegre :
   # Retourne la plus petite des deux valeurs.
   Si a < b Alors
     Retourne a
@@ -277,6 +299,7 @@ FinFonction
 ############################
 
 Fonction Somme(T[] en Quelconque) en Quelconque
+  # Teegre :
   # Retourne la somme des valeurs d'un Tableau.
   Variable i en Entier
   Variable s en Quelconque
@@ -291,6 +314,7 @@ Fonction Somme(T[] en Quelconque) en Quelconque
 FinFonction
 
 Fonction Compter(T[] en Quelconque, valeur en Quelconque) en Entier
+  # Teegre :
   # Retourne le nombre d'occurences d'une valeur
   # se trouvant dans un Tableau
   Variables c, i en Entier
@@ -304,6 +328,7 @@ Fonction Compter(T[] en Quelconque, valeur en Quelconque) en Entier
 FinFonction
 
 Fonction ___Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en Entier
+  # Teegre :
   # Retourne le premier index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
   # Si le paramètre `casse` est VRAI, la recherche est 
@@ -336,14 +361,17 @@ Fonction ___Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en
 FinFonction
 
 Fonction IndexSC(T[] en Chaîne, valeur en Chaîne) en Entier
+  # Teegre :
   Retourne ___Index(T, valeur, VRAI)
 FinFonction
 
 Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
+  # Teegre :
   Retourne ___Index(T, valeur, FAUX)
 FinFonction
 
 Fonction TMax(T[] en Quelconque) en Quelconque
+  # Teegre :
   # Retourne la plus grande valeur d'un tableau.
   Variable i en Entier
   Variable n en Quelconque
@@ -357,6 +385,7 @@ Fonction TMax(T[] en Quelconque) en Quelconque
 FinFonction
 
 Fonction TMin(T[] en Quelconque) en Quelconque
+  # Teegre :
   # Retourne la plus petite valeur d'un tableau.
   Variable i en Entier
   Variable n en Quelconque
@@ -370,7 +399,8 @@ Fonction TMin(T[] en Quelconque) en Quelconque
 FinFonction
 
 Fonction TLongueur(T[] en Quelconque) en Entier
-  # Retourne le nombre d'éléments dans une liste
+  # Teegre :
+  # Retourne le nombre d'éléments dans un Tableau.
   Variables c, i en Entier
   c <- 0
   Pour i <- 0 à Taille(T) - 1
@@ -382,7 +412,8 @@ Fonction TLongueur(T[] en Quelconque) en Entier
 FinFonction
 
 Procédure Trancher(T[] en Quelconque, idx1, idx2 en Entier, &U[] en Quelconque)
-  # Copie les élements de `idx1` à `idx2` d'un Tableau `T` dans un Tableau `U`.
+  # Teegre :
+  # Copie les élements de `idx1` à `idx2` d'un Tableau `T` vers un Tableau `U`.
   Variables min, max, i en Entier
 
   Si TLongueur(T) = 0 Alors
@@ -408,6 +439,8 @@ Procédure Trancher(T[] en Quelconque, idx1, idx2 en Entier, &U[] en Quelconque)
 FinProcédure
 
 Procédure ___Echanger(&T[] en Quelconque, index1, index2 en Entier)
+  # Teegre :
+  # Echange deux valeurs dans un Tableau selon les index donnés.
   Variable temp en Quelconque
   temp <- T[index1]
   T[index1] <- T[index2]
@@ -415,6 +448,7 @@ Procédure ___Echanger(&T[] en Quelconque, index1, index2 en Entier)
 FinProcédure
 
 Procédure Insérer(&T[] en Quelconque, valeur en Quelconque, index en Entier)
+  # Teegre :
   # Insère une valeur dans un tableau à l'index donné.
   Variable i en Entier
 
@@ -427,7 +461,8 @@ Procédure Insérer(&T[] en Quelconque, valeur en Quelconque, index en Entier)
 FinProcédure
 
 Procédure Supprimer(&T[] en Quelconque, index en Entier)
-  # Supprime l'élement d'une liste à l'index donné.
+  # Teegre :
+  # Supprime l'élement d'un Tableau à l'index donné.
   Variable i en Entier
 
   Pour i <- index à Taille(T) - 2
@@ -436,7 +471,19 @@ Procédure Supprimer(&T[] en Quelconque, index en Entier)
   Redim T[Taille(T) - 2]
 FinProcédure
 
+Fonction Pop(&T[] en Quelconque) en Quelconque
+  # Teegre :
+  # Efface le dernier élément d'un Tableau et retourne sa valeur.
+  Variable e en Quelconque
+  
+  e <- T[Taille(T) - 1]
+  Redim T[Taille(T) - 2]
+  Retourne e
+FinFonction
+
 Fonction ___Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Booléen) en Entier
+  # Teegre :
+  # Fonction de partitionnement d'un Tableau dans le cadre d'un tri `Quicksort`.
   Variable pivot en Quelconque
   Variables i, j en Entier
   Variable ordre en Booléen
@@ -461,6 +508,8 @@ Fonction ___Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Bo
 FinFonction
 
 Procédure ___Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Booléen)
+  # Teegre :
+  # Algorithme de tri developpé par Tony Hoare en 1959 et publié en 1961.
   Variable p en Entier
 
   Si min >= max OU max < 0 Alors
@@ -473,14 +522,20 @@ Procédure ___Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Boo
 FinProcédure
 
 Procédure Trier(&T[] en Quelconque)
+  # Teegre :
+  # Trie un Tableau dans l'ordre croissant. 
   ___Quicksort(T, 0, Taille(T) - 1, VRAI)
 FinProcédure
 
 Procédure Inverser(&T[] en Quelconque)
+  # Teegre :
+  # Trie un Tableau dans l'ordre décroissant.
   ___Quicksort(T, 0, Taille(T) - 1, FAUX)
 FinProcédure
 
 Procédure ___InitTableau(&T[] en Quelconque, valeur en Quelconque)
+  # Teegre :
+  # Remplit un tableau avec la valeur donnée.
   Variable i en Entier
   Pour i <- 0 à Taille(T) - 1
     T[i] <- valeur
@@ -488,6 +543,9 @@ Procédure ___InitTableau(&T[] en Quelconque, valeur en Quelconque)
 FinProcédure
 
 Procédure Mélanger(&T[] en Quelconque)
+  # Teegre :
+  # TODO: Particulièrement inefficace sur de grands tableaux.
+  # Mélange les éléments d'un tableau.
   Tableau COMPTEUR[] en Entier
   Tableau TEMP[] en Quelconque
   Variables i, idx en Entier
@@ -510,6 +568,8 @@ Procédure Mélanger(&T[] en Quelconque)
 FinProcédure
 
 Fonction TContient(T[] en Quelconque, v en Quelconque) en Booléen
+  # Teegre :
+  # Retourne VRAI si un élément donné se trouve dans un tableau.
   Variables d, f en Entier
 
   d <- 0
@@ -526,6 +586,7 @@ Fonction TContient(T[] en Quelconque, v en Quelconque) en Booléen
 FinFonction
 
 Procédure Grouper(T[] en Quelconque, &G[] en Quelconque)
+  # Teegre :
   # Groupe les valeurs d'un tableau T dans un tableau G.
   # Ex : [1, 2, 2, 1, 3] → [1, 2, 3]
   Table groupe

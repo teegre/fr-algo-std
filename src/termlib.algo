@@ -1,5 +1,9 @@
 Librairie
 
+Constante ___TERMLIB_VERSION  "0.0.1"
+Constante ___TERMLIB_DATE_MOD "2024/10/16"
+Constante ___TERMLIB_AUTEUR "Stéphane MEYER (Teegre)"
+
 ###########################################
 # UTILITAIRES POUR MODIFIER LES ATTRIBUTS
 # DES CARACTÈRES AFFICHÉS DANS UN TERMINAL
@@ -9,6 +13,7 @@ Librairie
 # après utilisation dans l'environnement interactif.
 
 Fonction RVB(r, v, b en Entier) en Chaîne
+  # Teegre :
   # Retourne un code pour le terminal qui
   # change la couleur du texte.
   Variable code en Chaîne
@@ -20,6 +25,7 @@ Fonction RVB(r, v, b en Entier) en Chaîne
 FinFonction
 
 Fonction FRVB(r, v, b en Entier) en Chaîne
+  # Teegre :
   # Retourne un code pour le terminal qui
   # change la couleur du fond.
   Variable code en Chaîne
@@ -31,6 +37,7 @@ Fonction FRVB(r, v, b en Entier) en Chaîne
 FinFonction
 
 Fonction Attr(a en Chaîne) en Chaîne
+  # Teegre :
   # Retourne un code pour le terminal qui
   # change un attribut du texte :
   # gr(as) at(tenué) it(alique) so(uligné) cl(ignotant) in(verse)
@@ -56,53 +63,64 @@ Fonction FinA() en Chaîne
 FinFonction
 
 Procédure EffaceEcran()
+  # Teegre :
   Ecrire "\033[2J\033[H" \
 FinProcédure
 
 Procédure PosCur(lgn, col en Entier)
+  # Teegre :
   # Positionne le curseur : lgn (ligne) et col (colonne).
   Ecrire "\033[" & Chaîne(lgn) & ";" & Chaîne(col) & "H" \
 FinProcédure
 
 Procédure PosEcrire(lgn, col en Entier, texte en Chaîne)
+  # Teegre :
   # Ecrit le texte à la position donnée.
   PosCur(lgn, col)
   Ecrire texte \
 FinProcédure
 
 Procédure PosCol(col en Entier)
+  # Teegre :
   Ecrire "\033[" & Chaîne(col) & "G" \
 FinProcédure
 
 Procédure EffaceFL()
+  # Teegre :
   # Efface depuis la position du curseur jusqu'à la fin de la ligne.
   Ecrire "\033[K" \
 FinProcédure
 
 Procédure EffaceBE()
+  # Teegre :
   # Efface depuis la position du curseur jusqu'au bas de l'écran.
   Ecrire "\033[0J" \
 FinProcédure
 
 Procédure EffaceL()
+  # Teegre :
   # Efface la ligne à la position du curseur.
   Ecrire "\033[2K" \
 FinProcédure
 
 Procédure CacheCur()
+  # Teegre :
   Ecrire "\033[?25l" \
 FinProcédure
 
 Procédure MontreCur()
+  # Teegre :
   Ecrire "\033[?25h" \
 FinProcédure
 
 Procédure SauveCur()
+  # Teegre :
   # Enregistre la position du curseur.
   Ecrire "\033[s" \
 FinProcédure
 
 Procédure RestaureCur()
+  # Teegre :
   # Restaure la position du curseur enregistée precédemment.
   Ecrire "\033[u" \
 FinProcédure
