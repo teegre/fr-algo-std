@@ -1,6 +1,6 @@
 Librairie
 
-Constante ___STDLIB_AUTEUR "Stéphane MEYER (Teegre)"
+Constante ___STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante ___STDLIB_VERSION  "0.0.1"
 Constante ___STDLIB_DATE_MOD "2024/10/16"
 
@@ -313,17 +313,40 @@ FinFonction
 # UTILITAIRES POUR TABLEAUX
 ############################
 
+Fonction TEstMulti(T[] en Quelconque) en Booléen
+  # Teegre :
+  # Retourne `VRAI` si le Tableau donné en paramètre
+  # possède plusieurs dimensions.
+  Retourne CommencePar(Type(Taille(T)), "Tableau")
+FinFonction
+
+
+# NOTE : Les fonctions et procédures suivantes ne sont
+# valables que pour les Tableaux unidimensionnels.
+
 Fonction Somme(T[] en Quelconque) en Quelconque
   # Teegre :
   # Retourne la somme des valeurs d'un Tableau.
   Variable i en Entier
   Variable s en Quelconque
+
+  Si TEstMulti(T) Alors
+    Panique "Somme : Tableaux multidimensionnels non supportés."
+  FinSi
+
+  Si (Longueur(T) = 0) OU (Taille(T) = 0) Alors
+    Retourne 0
+  FinSi
+
   Si Type(T[0]) <> "Entier" ET Type(T[0]) <> "Numérique" Alors
     Panique "Somme : type `Entier` ou `Numérique` attendu [", Type(T[0]), "]"
   FinSi
+
   s <- T[0]
   Pour i <- 1 à Taille(T) - 1
-    s <- s + T[i]
+    Si T[i] Alors
+      s <- s + T[i]
+    FinSi
   i Suivant
   Retourne s
 FinFonction
@@ -444,6 +467,11 @@ Procédure ___Echanger(&T[] en Quelconque, index1, index2 en Entier)
   # Teegre :
   # Echange deux valeurs dans un Tableau selon les index donnés.
   Variable temp en Quelconque
+
+  Si index1 = index2 Alors
+    Terminer
+  FinSi
+
   temp <- T[index1]
   T[index1] <- T[index2]
   T[index2] <- temp
@@ -483,6 +511,23 @@ Fonction Pop(&T[] en Quelconque) en Quelconque
   Retourne e
 FinFonction
 
+Fonction ___Etrier(T[] en Quelconque, croissant en Booléen) en Booléen
+  Variable i en Entier
+  Variable cond en Booléen
+
+  Pour i <- 0 à Longueur(T) - 2
+    Si croissant Alors
+      cond <- T[i] > T[i + 1]
+    Sinon
+      cond <- T[i + 1] > T[i]
+    FinSi
+    Si cond Alors
+      Retourne FAUX
+    FinSi
+  i Suivant
+  Retourne VRAI
+FinFonction
+
 Fonction ___Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Booléen) en Entier
   # Teegre :
   # Fonction de partitionnement d'un Tableau dans le cadre d'un tri `Quicksort`.
@@ -514,7 +559,7 @@ Procédure ___Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Boo
   # Algorithme de tri developpé par Tony Hoare en 1959 et publié en 1961.
   Variable p en Entier
 
-  Si min >= max OU max < 0 Alors
+  Si (min >= max) OU (max < 0) Alors
     Terminer
   FinSi
 
@@ -526,12 +571,22 @@ FinProcédure
 Procédure Trier(&T[] en Quelconque)
   # Teegre :
   # Trie un Tableau dans l'ordre croissant. 
+
+  Si ___Etrier(T, VRAI) Alors
+    Terminer
+  FinSi
+
   ___Quicksort(T, 0, Taille(T) - 1, VRAI)
 FinProcédure
 
 Procédure TrierD(&T[] en Quelconque)
   # Teegre :
   # Trie un Tableau dans l'ordre décroissant.
+
+  Si ___Etrier(T, FAUX) Alors
+    Terminer
+  FinSi
+
   ___Quicksort(T, 0, Taille(T) - 1, FAUX)
 FinProcédure
 
