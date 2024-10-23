@@ -36,31 +36,60 @@ Fonction FRVB(r, v, b en Entier) en Chaîne
   Retourne code
 FinFonction
 
-Fonction Attr(a en Chaîne) en Chaîne
-  # Teegre :
-  # Retourne un code pour le terminal qui
-  # change un attribut du texte :
-  # gr(as) at(tenué) it(alique) so(uligné) cl(ignotant) in(verse)
-  Si a = "gr" Alors
-    Retourne "\033[1m"
-  SinonSi a = "at" Alors
-    Retourne "\033[2m"
-  SinonSi a = "it" Alors
-    Retourne "\033[3m"
-  SinonSi a = "so" Alors
-    Retourne "\033[4m"
-  SinonSi a = "cl" Alors
-    Retourne "\033[5m"
-  SinonSi a = "in" Alors
-    Retourne "\033[7m"
-  FinSi
-  Retourne ""
-FinFonction
+# Teegre :
+# Attributs du texte :
+# - GRAS
+Constante GR "\033[1m"
+# - ATTENUÉ
+Constante AT "\033[2m"
+# - ITALIQUE
+Constante IT "\033[3m"
+# - SOULIGNÉ
+Constante SO "\033[4m"
+# - CLIGNOTANT
+Constante CL "\033[5m"
+# - INVERSE
+Constante IN "\033[7m"
 
-Fonction FinA() en Chaîne
-  # Annule tous les attributs/couleurs en cours.
-  Retourne "\033[0m"
-FinFonction
+# Couleurs du texte :
+# - NOIR
+Constante TNO "\033[30m"
+# - ROUGE
+Constante TRO "\033[31m"
+# - VERT
+Constante TVE "\033[32m"
+# - JAUNE
+Constante TJA "\033[33m"
+# - BLEU
+Constante TBL "\033[34m"
+# - MAGENTA
+Constante TMA "\033[35m"
+# - CYAN
+Constante TCY "\033[36m"
+# - BLANC
+Constante TBC "\033[37m"
+
+
+# Couleurs du fond :
+# - NOIR
+Constante FNO "\033[40m"
+# - ROUGE
+Constante FRO "\033[41m"
+# - VERT
+Constante FVE "\033[42m"
+# - JAUNE
+Constante FJA "\033[43m"
+# - BLEU
+Constante FBL "\033[44m"
+# - MAGENTA
+Constante FMA "\033[45m"
+# - CYAN
+Constante FCY "\033[46m"
+# - BLANC
+Constante FBC "\033[47m"
+
+# - ANNULE
+Constante AN "\033[0m"
 
 Procédure EffaceEcran()
   # Teegre :
