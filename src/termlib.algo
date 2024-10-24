@@ -39,17 +39,17 @@ FinFonction
 # Teegre :
 # Attributs du texte :
 # - GRAS
-Constante GR "\033[1m"
+Constante TGR "\033[1m"
 # - ATTENUÉ
-Constante AT "\033[2m"
+Constante TAT "\033[2m"
 # - ITALIQUE
-Constante IT "\033[3m"
+Constante TIT "\033[3m"
 # - SOULIGNÉ
-Constante SO "\033[4m"
+Constante TSO "\033[4m"
 # - CLIGNOTANT
-Constante CL "\033[5m"
+Constante TCL "\033[5m"
 # - INVERSE
-Constante IN "\033[7m"
+Constante TIN "\033[7m"
 
 # Couleurs du texte :
 # - NOIR
@@ -89,7 +89,41 @@ Constante FCY "\033[46m"
 Constante FBC "\033[47m"
 
 # - ANNULE
-Constante AN "\033[0m"
+Constante ANN "\033[0m"
+
+Fonction Hauteur() en Entier
+  # Teegre :
+  # Retourne la hauteur en nombre de lignes
+  # du terminal courant.
+  Tableau t[1] en Entier
+  t ← TailleTerm()
+  Retourne t[0]
+FinFonction
+
+Fonction Largeur() en Entier
+  # Teegre :
+  # Retourne la largeur en nombre de colonnes
+  # du terminal courant
+  Tableau t[1] en Entier
+  t ← TailleTerm()
+  Retourne t[1]
+FinFonction
+
+Fonction CurPosY()
+  # Teegre :
+  # Retourne la position Y du curseur (ligne)
+  Tableau p[1] en Entier
+  p ← CurPos()
+  Retourne p[0]
+FinFonction
+
+Fonction CurPosX()
+  # Teegre :
+  # Retourne la position X du curseur (colonne)
+  Tableau p[1] en Entier
+  p ← CurPos()
+  Retourne p[1]
+FinFonction
 
 Procédure EffaceEcran()
   # Teegre :
