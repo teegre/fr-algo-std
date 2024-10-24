@@ -109,7 +109,7 @@ Fonction Largeur() en Entier
   Retourne t[1]
 FinFonction
 
-Fonction CurPosY()
+Fonction CurPosY() en Entier
   # Teegre :
   # Retourne la position Y du curseur (ligne)
   Tableau p[1] en Entier
@@ -117,7 +117,7 @@ Fonction CurPosY()
   Retourne p[0]
 FinFonction
 
-Fonction CurPosX()
+Fonction CurPosX() en Entier
   # Teegre :
   # Retourne la position X du curseur (colonne)
   Tableau p[1] en Entier
