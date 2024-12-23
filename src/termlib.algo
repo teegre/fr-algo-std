@@ -2,7 +2,7 @@ Librairie
 
 Constante ___TERMLIB_AUTEUR "Stéphane MEYER (Teegre)"
 Constante ___TERMLIB_VERSION  "0.0.1"
-Constante ___TERMLIB_DATE_MOD "2024/10/16"
+Constante ___TERMLIB_DATE_MOD "2024/10/25"
 
 ###########################################
 # UTILITAIRES POUR MODIFIER LES ATTRIBUTS
@@ -96,7 +96,7 @@ Fonction Hauteur() en Entier
   # Retourne la hauteur en nombre de lignes
   # du terminal courant.
   Tableau t[1] en Entier
-  t ← TailleTerm()
+  t ← TailleEcran()
   Retourne t[0]
 FinFonction
 
@@ -105,7 +105,7 @@ Fonction Largeur() en Entier
   # Retourne la largeur en nombre de colonnes
   # du terminal courant
   Tableau t[1] en Entier
-  t ← TailleTerm()
+  t ← TailleEcran()
   Retourne t[1]
 FinFonction
 
@@ -182,8 +182,8 @@ Procédure SauveCur()
   Ecrire "\033[s" \
 FinProcédure
 
-Procédure RestaureCur()
+Procédure RappelCur()
   # Teegre :
-  # Restaure la position du curseur enregistée precédemment.
+  # Rappelle la position du curseur precédemment enregistrée.
   Ecrire "\033[u" \
 FinProcédure
