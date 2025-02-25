@@ -454,7 +454,7 @@ Procédure Trancher(T[] en Quelconque, idx1, idx2 en Entier, &U[] en Quelconque)
 
   Redim U[max - min]
 
-  Si max > TLongueur(T) - 1 Alors
+  Si max > Longueur(T) - 1 Alors
     Panique "Trancher : index invalide", max
   FinSi
 
