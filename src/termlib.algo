@@ -2,7 +2,7 @@ Librairie
 
 Constante ___TERMLIB_AUTEUR "Stéphane MEYER (Teegre)"
 Constante ___TERMLIB_VERSION  "0.0.1"
-Constante ___TERMLIB_DATE_MOD "2024/10/25"
+Constante ___TERMLIB_DATE_MOD "2025/03/21"
 
 ###########################################
 # UTILITAIRES POUR MODIFIER LES ATTRIBUTS
@@ -134,6 +134,18 @@ Procédure PosCur(lgn, col en Entier)
   # Teegre :
   # Positionne le curseur : lgn (ligne) et col (colonne).
   Ecrire "\033[" & Chaîne(lgn) & ";" & Chaîne(col) & "H" \
+FinProcédure
+
+Procédure PosCurH(lgn en Entier)
+  # Teegre :
+  # Positionne le curseur "lgn" lignes plus haut.
+  Ecrire "\033[" & Chaîne(lgn) & "A" \
+FinProcédure
+
+Procédure PosCurG(col en Entier)
+  # Teegre :
+  # Positionne le curseur "col" colonnes à gauche.
+  Ecrire "\033[" & Chaîne(col) & "D" \
 FinProcédure
 
 Procédure PosEcrire(lgn, col en Entier, texte en Chaîne)
