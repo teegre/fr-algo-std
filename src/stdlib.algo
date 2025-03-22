@@ -2,7 +2,7 @@ Librairie
 
 Constante ___STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante ___STDLIB_VERSION  "0.0.1"
-Constante ___STDLIB_DATE_MOD "2024/10/16"
+Constante ___STDLIB_DATE_MOD "2025/03/22"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
@@ -117,6 +117,16 @@ Fonction Minus(ch en Chaîne) en Chaîne
   i Suivant
 
   Retourne résultat
+FinFonction
+
+Fonction Capitaliser(ch en Chaîne) en Chaîne
+  # Teegre :
+  # La première lettre est convertie en majuscules
+  # et les suivantes en minuscules.
+  Si Longueur(ch) > 1 Alors
+    Retourne Majus(Extraire(ch, 1, 1)) & Minus(Extraire(ch, 2, Longueur(ch) - 1))
+  FinSi
+  Retourne Majus(ch)
 FinFonction
 
 Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
