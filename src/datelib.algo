@@ -1,0 +1,165 @@
+Librairie
+
+Importer "stdlib" Alias std
+
+Constante ___DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
+Constante ___DATELIB_VERSION  "0.0.1"
+Constante ___DATELIB_DATE_MOD "2025/03/23"
+
+Constante ___JOURS ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
+Constante ___JOURS_C ["lun.", "mar.", "mer.", "jeu.", "ven.", "sam.", "dim."]
+Constante ___MOIS ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+Constante ___MOIS_C ["jan.", "fév.", "mars", "avr", "mai", "juin", "jui.", "août", "sept.", "oct.", "nov.", "déc."]
+
+################################
+# STRUCTURES POUR DATE ET HEURE
+################################
+
+Structure TDate
+  j en Entier
+  J en Entier
+  M en Entier
+  A en Entier
+FinStructure
+
+Structure THeure
+  h en Entier
+  m en Entier
+  s en Entier
+FinStructure
+
+Structure TDateHeure
+  JourAnnée en Entier
+  Date en TDate
+  Heure en THeure
+FinStructure
+
+##############################
+# UTILITAIRES POUR DATE/HEURE
+##############################
+
+Fonction EstBissextile(A en Quelconque) en Booléen
+  Retourne Booléen(NON(A % 4) OU (A % 100) ET NON(A % 400))
+FinFonction
+
+Procédure DateHeure(secs en Numérique, &tdateheure en TDateHeure)
+  Constante Jours1erJanvier [[0,31,59,90,120,151,181,212,243,273,304,334,365],[0,31,60,91,121,152,182,213,244,274,305,335,366]]
+
+  Variables qct, ct, qd, an en Entier
+  Variables année, jourannée, mois, jourmois, joursemaine en Entier
+  Variable m en Entier
+  Variables heures, minutes, secondes en Entier
+  Variables bisx, ignore en Booléen
+  
+  joursemaine ← Entier((((secs + 1164473600) / 86400) % 7) + 1)
+  qct ← Entier(secs / 12622815360)
+  secondes ← Entier(secs % 12622815360)
+  ct ← secondes / 3155673600
+  
+  Si ct > 3 Alors
+   ct ← 3
+  FinSi
+
+  secondes ← secondes - (ct * 3155673600)
+  qd ← secondes / 126230400
+
+  Si qd > 24 Alors
+    qd ← 24
+  FinSi
+
+  secondes ← secondes - (qd * 126230400)
+  an ← secondes / 31536000
+
+  Si an > 3 Alors
+    an ← 3
+  FinSi
+
+  secondes ← secondes - (an * 31536000)
+  année ← 1970 + (qct * 400) + (ct * 100) + (qd * 4) + an
+  bisx ← EstBissextile(Entier(année))
+  jourannée ← secondes / 86400
+  secondes ← secondes % 86400
+  heures ← secondes / 3600
+  secondes ← secondes % 3600
+  minutes ← secondes / 60
+  secondes ← secondes % 60
+  jourmois ← 0
+
+  ignore ← FAUX
+
+  Pour m ← 1 à 12
+    Si NON(ignore) Alors
+      mois ← m
+    FinSi
+    Si (jourannée < Jours1erJanvier[Entier(bisx),m]) ET NON(ignore) Alors
+      jourmois ← jourmois + (jourannée - Jours1erJanvier[Entier(bisx), m-1])
+      ignore ← VRAI
+    FinSi
+  m Suivant
+
+  tdateheure.JourAnnée ← jourannée
+  tdateheure.Date.j ← joursemaine
+  tdateheure.Date.J ← jourmois
+  tdateheure.Date.M ← mois
+  tdateheure.Date.A ← année
+  tdateheure.Heure.h ← heures
+  tdateheure.Heure.m ← minutes
+  tdateheure.Heure.s ← secondes
+
+FinProcédure
+
+Fonction Format(secs en Numérique, format en Chaîne) en Chaîne
+  # Retourne une date/heure en temps UNIX selon le format donné.
+  #
+  # %A jour de la semaine (lundi)
+  # %a jour de la semaine (lun.)
+  # %B mois (janvier)
+  # %b mois (jan.)
+  # %d jour du mois (01..31)
+  # %H heures (00..23)
+  # %I heures (01..12)
+  # %j jour de l'année (001..366)
+  # %M minutes (00..59)
+  # %m mois (01..12)
+  # %P AM/PM
+  # %p am/pm
+  # %S secondes (01..59)
+  # %Y année (2025)
+
+  Variable tdateheure en TDateHeure
+  Variables ch, P en Chaîne
+  Variables H, I en Entier
+
+  DateHeure(secs, tdateheure)
+  H ← tdateheure.Heure.h
+
+  Si H % 12 = 0 Alors
+    I ← 12
+  Sinon
+    I ← H % 12
+  FinSi
+  Si H > 0 ET H < 12 Alors
+    P ← "AM"
+  Sinon
+    P ← "PM"
+  FinSi
+
+  ch ← format
+  ch ← std:Remplacer(ch, "%A", ___JOURS[tdateheure.Date.j - 1])
+  ch ← std:Remplacer(ch, "%a", ___JOURS_C[tdateheure.Date.j - 1])
+  ch ← std:Remplacer(ch, "%B", ___MOIS[tdateheure.Date.M - 1])
+  ch ← std:Remplacer(ch, "%b", ___MOIS_C[tdateheure.Date.M - 1])
+  ch ← std:Remplacer(ch, "%d", std:RemplirGauche(Chaîne(tdateheure.Date.J), "0", 2))
+  ch ← std:Remplacer(ch, "%H", std:RemplirGauche(Chaîne(H), "0", 2))
+  ch ← std:Remplacer(ch, "%I", std:RemplirGauche(Chaîne(I), "0", 2))
+  ch ← std:Remplacer(ch, "%j", std:RemplirGauche(Chaîne(tdateheure.JourAnnée), "0", 3))
+  ch ← std:Remplacer(ch, "%M", std:RemplirGauche(Chaîne(tdateheure.Heure.m), "0", 2))
+  ch ← std:Remplacer(ch, "%m", std:RemplirGauche(Chaîne(tdateheure.Date.M), "0", 2))
+  ch ← std:Remplacer(ch, "%P", P)
+  ch ← std:Remplacer(ch, "%p", std:Minus(P))
+  ch ← std:Remplacer(ch, "%S", std:RemplirGauche(Chaîne(tdateheure.Heure.s), "0", 2))
+  ch ← std:Remplacer(ch, "%Y", Chaîne(tdateheure.Date.A))
+
+  Retourne ch
+
+FinFonction
