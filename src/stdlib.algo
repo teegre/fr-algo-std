@@ -181,6 +181,45 @@ Fonction Contient(ch, v en Chaîne) en Booléen
   Retourne Trouve(ch, v) > 0
 FinFonction
 
+Fonction Remplacer(ch, oc, rp en Chaîne) en Chaîne
+  # Teegre :
+  # Remplace une occurence dans une Chaîne par une autre Chaîne.
+  # Retourne la Chaîne inchangée si l'occurence recherchée n'y
+  # figure pas.
+
+  Variables deb, fin en Entier
+
+  Si NON(Contient(ch, oc)) Alors
+    Retourne ch
+  FinSi
+
+  deb ← Trouve(ch, oc)
+  fin ← deb + Longueur(oc)
+
+  Retourne Gauche(ch, deb - 1) & rp & Droite(ch, Longueur(ch) - fin + 1)
+FinFonction
+
+Fonction RemplirGauche(ch, oc en Quelconque, long en Entier) en Chaîne
+  # Teegre :
+  # Ajoute des caractères à la gauche d'une chaîne de caractères
+  # jusqu'à atteindre une longueur spécifiée.
+
+  Variable résultat en Chaîne
+
+  résultat ← Chaîne(ch)
+
+  Si Longueur(résultat) >= long Alors
+    Retourne résultat
+  FinSi
+
+  TantQue Longueur(résultat) <> long
+    résultat ← Chaîne(oc) & résultat
+  FinTantQue
+
+  Retourne résultat
+
+FinFonction
+
 #####################
 # AUTRES UTILITAIRES
 #####################
