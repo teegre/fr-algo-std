@@ -2,18 +2,36 @@ Librairie
 
 Importer "stdlib" Alias std
 
-Constante ___DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
-Constante ___DATELIB_VERSION  "0.0.1"
-Constante ___DATELIB_DATE_MOD "2025/03/24"
+#############
+# CONSTANTES
+#############
 
-Constante ___JOURS ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
-Constante ___JOURS_C ["lun.", "mar.", "mer.", "jeu.", "ven.", "sam.", "dim."]
-Constante ___MOIS ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
-Constante ___MOIS_C ["jan.", "fév.", "mars", "avr", "mai", "juin", "jui.", "août", "sept.", "oct.", "nov.", "déc."]
+Constante @DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
+Constante @DATELIB_VERSION  "0.0.1"
+Constante @DATELIB_DATE_MOD "2025/03/30"
 
-# Jours depuis le 1er janvier
-Constante ___JDEP1JAN [[0,31,59,90,120,151,181,212,243,273,304,334,365],[0,31,60,91,121,152,182,213,244,274,305,335,366]]
+Constante @EPOQUE 1970
+Constante @SECSJ  86400
 
+# la première semaine ISO commence un lundi
+Constante @SEMISO_A  1
+# La première semaine de l’année ISO est celle qui contient le premier jeudi.
+Constante @SEMISO1_A 4
+# Assure que les calculs couvrent les années bissextiles.
+Constante @MINJ -366
+# On cherche un multiple de 7 suffisamment grand pour que l'opération
+# modulo suivante soit toujours positive.
+Constante @GM7 (-@MINJ / 7 + 2) * 7
+
+
+Constante @JOURS ["dimanche" ,"lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
+Constante @JOURS_ABR ["dim." ,"lun.", "mar.", "mer.", "jeu.", "ven.", "sam."]
+Constante @MOIS    ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+Constante @MOIS_ABR  ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juill.", "août", "sept.", "oct.", "nov.", "déc."]
+
+# Nb. jours par mois
+###################### COMMUNE                                 BISSEXTILE
+Constante @NJOURSMOIS [[0,31,28,31,30,31,30,31,31,30,31,30,31],[0,31,29,31,30,31,30,31,31,30,31,30,31]]
 
 ################################
 # STRUCTURES POUR DATE ET HEURE
@@ -56,138 +74,173 @@ FinStructure
 # UTILITAIRES POUR DATE/HEURE
 ##############################
 
-Fonction ___Bissextile(A en Quelconque) en Booléen
-  Retourne Booléen(NON(A % 4) OU (A % 100) ET NON(A % 400))
-FinFonction
-
-Fonction ___SemaineISO(année, jourannée en Entier) en Entier
-  Variables décalage, J, semaine en Entier
-
-  Fonction Jour1Jan(année en Entier) en Entier
-    Retourne ((1164473600 + (année - 1970) * 31556952) / 86400) % 7 + 1
-  FinFonction
-
-  Fonction Décalage(année en Entier) en Entier
-    Variable J en Entier
-
-    # Déterminer le jour de la semaine du 1er janvier de l'année courante
-    J ← Jour1Jan(année)
-
-    Si J <= 4 Alors
-      Retourne 1 - J
-    FinSi
-
-    Retourne 8 - J
-  FinFonction
-
-  # Trouver le premier jeudi de l'année
-  décalage ← Décalage(année)
-
-  # Calculer le nombre de semaines complètes
-  semaine ← (jourannée - décalage) / 7 + 1
-
-  # Cas particulier où le 1er janvier appartient à la dernière semaine de l'année précédente
-  Si semaine < 1 Alors
-    décalage ← Décalage(année - 1)
-    semaine ← (___JDEP1JAN[Entier(___Bissextile(année)), 12] - décalage) / 7 + 1
-  FinSi
-
-  # Cas particulier où le 31 décembre appartient à la semaine 1 de l'année suivante
-  Si semaine > 52 ET ((jourannée - décalage) / 7 + 1) > 52 Alors
-    J ← Jour1Jan(année + 1)
-    Si J = 4 Alors
-      semaine ← 1
-    FinSi
-  FinSi
-  Retourne semaine
-FinFonction
-
-Procédure DateHeure(horodatage en Numérique, &tdateheure en TDateHeure)
+Fonction @Bissextile(Y en Entier) en Entier
   # Teegre :
-  # Renseigne une structure TDateHeure selon un nombre de secondes
-  # après l'époque UNIX donné.
+  # Retourne 1 si l'année donnée est bissextile,
+  # sinon 0.
+  Retourne Entier((Y % 4 = 0) ET ( (Y % 100 <> 0) OU (Y % 400 = 0) ))
+FinFonction
 
-  Variable SECS en Numérique
-  Variables qct, ct, qd, an en Entier
-  Variables année, jourannée, mois, jourmois, joursemaine, semaine en Entier
-  Variable m en Entier
-  Variables heures, minutes, secondes, nanosecondes en Entier
-  Variables bisx, ignore en Booléen
-  Variables zh, zhh, zhm en Entier
+Fonction @JoursAn(Y en Entier) en Entier
+  # Teegre :
+  # Renvoie le nombre de jours d'une année donnée.
+  Constante JOURS [365,366]
+  Retourne JOURS[@Bissextile(Y)]
+FinFonction
 
-  zh ← Entier(ZoneHoraire(horodatage))
+Fonction @dValide(Y, m, d en Entier) en Booléen
+  # Teegre :
+  # Retourne 1 si le jour du mois 'd' est valide
+  # pour le mois 'm' de l'année 'Y', sinon 0
+  Variable J en Entier
+  J ← @NJOURSMOIS[@Bissextile(Y), m]
+  Retourne Entier(J <= m ET J > 0)
+FinFonction
 
-  zhh ← zh / 100
-  zhm ← zh % 100
+Fonction @JoursSemaineISO(j, A en Entier) en Entier
+  # Teegre :
+  # Renvoie le nombre de jours écoulés depuis le
+  # début de la semaine ISO qui comprend le jour donné
+  # sous la forme : 'j' le jour de l'année, 'A' jour de la semaine.
 
-  SECS ← horodatage + (zhh * 3600) + (zhm * 60)
+  # (j - A + @SEMISO1_A + GM7) % 7) 
+  # ramène j - A au jeudi de la semaine ISO correspondante.
+  # On soustrait ce résultat à 'j' pour obtenir le premier jour de la semaine ISO.
+  # On ajuste en soustrayant SEMISO_A (1, soit lundi) pour retourner le bon nombre
+  # de jours écoulés.
+  Retourne (j - (j - A + @SEMISO1_A + @GM7) % 7 + @SEMISO1_A - @SEMISO_A)
+FinFonction
 
-  nanosecondes ← Entier((SECS % 1) * 10^9)
-  
-  joursemaine ← Entier((((SECS + 1164473600) / 86400) % 7) + 1)
-  qct ← Entier(SECS / 12622815360)
-  secondes ← Entier(SECS % 12622815360)
-  ct ← secondes / 3155673600
-  
-  Si ct > 3 Alors
-    ct ← 3
+Fonction @SemaineISO(Y, j, A en Entier) en Entier
+  # Teegre :
+  # Renvoie le numéro de semaine ISO pour une année,
+  # une jour de l'année et jour de la semaine donnés.
+  # <https://en.wikipedia.org/wiki/ISO_week_date#Algorithms>
+  Variables V, y, Ap, yp en Entier
+
+  # /!\ Dimanche est le premier jour de la semaine (donc 0 <= A <= 6)
+  # Dans l'algorithme suivant, le lundi est le premier jour de la semaine
+  # donc :
+  Si A = 0 Alors
+    A ← 7
   FinSi
 
-  secondes ← secondes - (ct * 3155673600)
-  qd ← secondes / 126230400
+  V ← (j - A + 10) / 7
 
-  Si qd > 24 Alors
-    qd ← 24
+  y ← @JoursAn(Y)
+
+  Si V < 1 Alors
+    Retourne @SemaineISO(Y-1, @JoursAn(Y-1), std:Abs(j - A))
   FinSi
 
-  secondes ← secondes - (qd * 126230400)
-  an ← secondes / 31536000
+  Si V = 53 Alors
+    # Jour de la semaine du 1er janvier de l'année suivante
+    Ap ← (j - A + y) % 7
 
-  Si an > 3 Alors
-    an ← 3
-  FinSi
-
-  secondes ← secondes - (an * 31536000)
-  année ← 1970 + (qct * 400) + (ct * 100) + (qd * 4) + an
-  bisx ← ___Bissextile(Entier(année))
-  jourannée ← secondes / 86400
-  secondes ← secondes % 86400
-  heures ← secondes / 3600
-  secondes ← secondes % 3600
-  minutes ← secondes / 60
-  secondes ← secondes % 60
-  jourmois ← 0
-
-  ignore ← FAUX
-
-  Pour m ← 1 à 12
-    Si NON(ignore) Alors
-      mois ← m
+    Si Ap = 0 Alors
+      Ap ← 7
     FinSi
-    Si (jourannée < ___JDEP1JAN[Entier(bisx),m]) ET NON(ignore) Alors
-      jourmois ← jourmois + (jourannée - ___JDEP1JAN[Entier(bisx), m-1])
-      ignore ← VRAI
+
+    # Jour de la semaine du début de la première semaine ISO
+    yp ← std:Abs(@SEMISO1_A - ((Ap - 1 + 7) % 7)) + 1
+    Si yp = 0 Alors
+      yp ← 7
     FinSi
-  m Suivant
 
-  semaine ← ___SemaineISO(année, jourannée)
+    Si @JoursSemaineISO(y, Ap) <= y Alors
+      Retourne 1
+    FinSi
+  FinSi
 
-  tdateheure.j       ← jourannée
-  tdateheure.V       ← semaine
-  tdateheure.date.A  ← joursemaine
-  tdateheure.date.d  ← jourmois
-  tdateheure.date.m  ← mois
-  tdateheure.date.Y  ← année
-  tdateheure.heure.H ← heures
-  tdateheure.heure.M ← minutes
-  tdateheure.heure.S ← secondes
-  tdateheure.heure.N ← nanosecondes
+  Retourne V
+FinFonction
 
+Fonction LocalversUNIX(date en Chaîne) en Numérique
+  # Teegre :
+  # Convertit une chaîne de caractères [J]J/[M]M/[DD]DD [H]H:[M]M:[S]S
+  Variables N, S, M, H, A, m, d, j en Entier
+  Retourne 0
+FinFonction
+
+Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
+  # Teegre ;
+  # Remplit une structure TDateHeure contenant la date et l'heure
+  # selon un horodatage donné (en temps UNIX).
+  Variable zh en Chaîne
+  Variables zhh, zhm, zhs en Entier
+  Variables jourhor, numjour, année, bx en Entier
+  Variable y en Entier
+
+  zh ← ZoneHoraire(horodatage)
+
+  # ZoneHoraire() peut retourner une chaîne
+  # contenant des secondes, par exemple : "+000921".
+  Si Longueur(zh) > 5 Alors
+    zhh ← Entier(Gauche(zh, 3))
+    zhm ← Entier(Extraire(zh, 4, 2))
+    zhs ← Entier(Extraire(zh, 6, Longueur(zh) - 5))
+    horodatage ← horodatage + zhh * 3600 + zhm * 60 + zhs
+  Sinon
+    zhh ← Entier(zh)
+    horodatage ← horodatage + (zhh / 100 * 3600) + (zhh % 100 * 3600)
+  FinSi
+
+  année ← @EPOQUE
+  
+  jourhor ← Entier(horodatage % @SECSJ)
+  numjour ← Entier(horodatage / @SECSJ)
+  
+  Si horodatage < 0 ET jourhor > 0 Alors
+    numjour ← numjour - 1
+  FinSi
+
+
+  tdh.heure.N ← Entier((horodatage % 1) * 10^9)
+  tdh.heure.S ← jourhor % 60
+  tdh.heure.M ← (jourhor % 3600) / 60
+  tdh.heure.H ← jourhor / 3600
+  tdh.date.A  ← (numjour + @SEMISO1_A) % 7
+
+  Si numjour >= 0 Alors
+    TantQue numjour >= @JoursAn(année)
+      numjour ← numjour - @JoursAn(année)
+      année ← année + 1
+    FinTantQue
+  Sinon
+    TantQue numjour < 0
+      numjour ← numjour + @JoursAn(année - 1)
+      année ← année - 1
+    FinTantQue
+  FinSi
+
+  Si année < 1 Alors
+    Panique "Les dates dont l'année est inférieure à 2 ne sont pas prises en charge."
+  FinSi
+
+  tdh.date.Y ← année
+
+  y ← @JoursAn(année)
+
+  numjour ← numjour + 1
+  numjour ← std:Min(numjour, y)
+
+  tdh.j ← numjour
+
+  bx ← @Bissextile(année)
+
+  tdh.date.m ← 0
+
+  TantQue numjour > @NJOURSMOIS[bx,tdh.date.m]
+    numjour ← numjour - @NJOURSMOIS[bx,tdh.date.m]
+    tdh.date.m ← tdh.date.m + 1
+  FinTantQue
+
+  tdh.date.d ← numjour
+  tdh.V ← @SemaineISO(tdh.date.Y, tdh.j, tdh.date.A)
 FinProcédure
 
 Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
-  # Teegre :
-  # Formate une date et une heure (en temps UNIX) selon un format spécifié,
+  # Teegre : Formate une date et une heure (en temps UNIX) selon un format spécifié,
   # en remplaçant les différents codes de formatage par les valeurs correspondantes
   # de la date et de l'heure.
   #
@@ -212,6 +265,7 @@ Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
   # %p AM/PM
   # %S secondes (01..59)
   # %V semaine ISO (1er jour = lundi) (01..53)
+  # %x bissextile (0..1)
   # %Y année (2025)
   # %y deux derniers chiffres de l'année (00..99)
   # %Z Zone horaire au format texte (ex : EDT)
@@ -219,9 +273,9 @@ Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
 
   Variable tdateheure en TDateHeure
   Variables ch, P en Chaîne
-  Variables C, y, H, I, M en Entier
+  Variables C, y, H, I, M, x en Entier
 
-  DateHeure(horodatage, tdateheure)
+  UNIXversLocal(horodatage, tdateheure)
   H ← tdateheure.heure.H
 
   Si H % 12 = 0 Alors
@@ -238,7 +292,9 @@ Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
   C ← Entier(Gauche(Chaîne(tdateheure.date.Y), 2))
   y ← Entier(Droite(Chaîne(tdateheure.date.Y), 2))
 
-  Si y > 1 Alors
+  x ← @Bissextile(tdateheure.date.Y)
+
+  Si y > 0 Alors
     C ← C + 1
   FinSi
 
@@ -246,26 +302,28 @@ Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
   ch ← std:Remplacer(ch, "%c", "%a %d %b %Y %H:%M:%S")
   ch ← std:Remplacer(ch, "%D", "%d/%m/%y")
   ch ← std:Remplacer(ch, "%F", "%d/%m/%Y")
-  ch ← std:Remplacer(ch, "%A", ___JOURS[tdateheure.date.A - 1])
-  ch ← std:Remplacer(ch, "%a", ___JOURS_C[tdateheure.date.A - 1])
-  ch ← std:Remplacer(ch, "%B", ___MOIS[tdateheure.date.m - 1])
-  ch ← std:Remplacer(ch, "%b", ___MOIS_C[tdateheure.date.m - 1])
+  ch ← std:Remplacer(ch, "%T", "%H:%M:%S")
+  ch ← std:Remplacer(ch, "%A", @JOURS[tdateheure.date.A])
+  ch ← std:Remplacer(ch, "%a", @JOURS_ABR[tdateheure.date.A])
+  ch ← std:Remplacer(ch, "%B", @MOIS[tdateheure.date.m - 1])
+  ch ← std:Remplacer(ch, "%b", @MOIS_ABR[tdateheure.date.m - 1])
   ch ← std:Remplacer(ch, "%C", Chaîne(C))
-  ch ← std:Remplacer(ch, "%d", std:RemplirGauche(Chaîne(tdateheure.date.d), "0", 2))
-  ch ← std:Remplacer(ch, "%H", std:RemplirGauche(Chaîne(H), "0", 2))
-  ch ← std:Remplacer(ch, "%I", std:RemplirGauche(Chaîne(I), "0", 2))
-  ch ← std:Remplacer(ch, "%j", std:RemplirGauche(Chaîne(tdateheure.j), "0", 3))
-  ch ← std:Remplacer(ch, "%M", std:RemplirGauche(Chaîne(tdateheure.heure.M), "0", 2))
-  ch ← std:Remplacer(ch, "%m", std:RemplirGauche(Chaîne(tdateheure.date.m), "0", 2))
-  ch ← std:Remplacer(ch, "%N", std:RemplirGauche(Chaîne(tdateheure.heure.N), "0", 9))
+  ch ← std:Remplacer(ch, "%d", std:RemplirGauche(tdateheure.date.d, "0", 2))
+  ch ← std:Remplacer(ch, "%H", std:RemplirGauche(H, "0", 2))
+  ch ← std:Remplacer(ch, "%I", std:RemplirGauche(I, "0", 2))
+  ch ← std:Remplacer(ch, "%j", std:RemplirGauche(tdateheure.j, "0", 3))
+  ch ← std:Remplacer(ch, "%M", std:RemplirGauche(tdateheure.heure.M, "0", 2))
+  ch ← std:Remplacer(ch, "%m", std:RemplirGauche(tdateheure.date.m, "0", 2))
+  ch ← std:Remplacer(ch, "%N", std:RemplirGauche(tdateheure.heure.N, "0", 9))
   ch ← std:Remplacer(ch, "%P", std:Minus(P))
   ch ← std:Remplacer(ch, "%p", P)
-  ch ← std:Remplacer(ch, "%S", std:RemplirGauche(Chaîne(tdateheure.heure.S), "0", 2))
-  ch ← std:Remplacer(ch, "%V", std:RemplirGauche(Chaîne(tdateheure.V), "0", 2))
-  ch ← std:Remplacer(ch, "%Y", Chaîne(tdateheure.date.Y))
-  ch ← std:Remplacer(ch, "%y", std:RemplirGauche(Chaîne(y), "0", 2))
-  ch ← std:Remplacer(ch, "%Z", ZoneHoraireTxt())
-  ch ← std:Remplacer(ch, "%z", ZoneHoraire(horodatage))
+  ch ← std:Remplacer(ch, "%S", std:RemplirGauche(tdateheure.heure.S, "0", 2))
+  ch ← std:Remplacer(ch, "%V", std:RemplirGauche(tdateheure.V, "0", 2))
+  ch ← std:Remplacer(ch, "%x", Chaîne(x))
+  ch ← std:Remplacer(ch, "%Y", std:RemplirGauche(tdateheure.date.Y, "0", 4))
+  ch ← std:Remplacer(ch, "%y", std:RemplirGauche(y, "0", 2))
+  ch ← std:Remplacer(ch, "%Z", ZoneHoraireTxt(horodatage))
+  ch ← std:Remplacer(ch, "%z", Gauche(ZoneHoraire(horodatage), 5))
 
   Retourne ch
 
