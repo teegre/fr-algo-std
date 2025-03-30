@@ -1,8 +1,8 @@
 Librairie
 
-Constante ___TERMLIB_AUTEUR "Stéphane MEYER (Teegre)"
-Constante ___TERMLIB_VERSION  "0.0.1"
-Constante ___TERMLIB_DATE_MOD "2025/03/21"
+Constante @TERMLIB_AUTEUR   "Stéphane MEYER (Teegre)"
+Constante @TERMLIB_VERSION  "0.0.1"
+Constante @TERMLIB_DATE_MOD "2025/03/25"
 
 ###########################################
 # UTILITAIRES POUR MODIFIER LES ATTRIBUTS

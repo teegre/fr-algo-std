@@ -1,14 +1,14 @@
 Librairie
 
-Constante ___STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
-Constante ___STDLIB_VERSION  "0.0.1"
-Constante ___STDLIB_DATE_MOD "2025/03/22"
+Constante @STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
+Constante @STDLIB_VERSION  "0.0.1"
+Constante @STDLIB_DATE_MOD "2025/03/25"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
 #########################################
 
-Fonction ___EstAlpha(c en Caractère) en Booléen
+Fonction @EstAlpha(c en Caractère) en Booléen
   # Teegre :
   # Retourne VRAI si `c` est un caractère alphabétique.
   Variable réponse en Booléen
@@ -23,7 +23,7 @@ Fonction ___EstAlpha(c en Caractère) en Booléen
   Retourne réponse
 FinFonction
 
-Fonction ___EstNum(c en Caractère) en Booléen
+Fonction @EstNum(c en Caractère) en Booléen
   # Teegre :
   # Retourne VRAI si  `c` est un caractère numérique..
   Retourne (CodeCar(c) > 47) ET (CodeCar(c) < 58)
@@ -40,7 +40,7 @@ Fonction EstNum(ch en Chaîne) en Booléen
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    réponse <- réponse ET ___EstNum(c)
+    réponse <- réponse ET @EstNum(c)
     Si NON(réponse) Alors
       Retourne FAUX
     FinSi
@@ -60,7 +60,7 @@ Fonction EstAlpha(ch en Chaîne) en Booléen
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    r <- r ET ___EstAlpha(c)
+    r <- r ET @EstAlpha(c)
     Si NON(r) Alors
       Retourne FAUX
     FinSi
@@ -81,7 +81,7 @@ Fonction Majus(ch en Chaîne) en Chaîne
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    condition <- ___EstAlpha(c)
+    condition <- @EstAlpha(c)
     condition <- condition ET ((CodeCar(c) >  96) ET (CodeCar(c) < 123))
     condition <- condition OU ((CodeCar(c) > 223) ET (CodeCar(c) < 254))
     Si condition Alors
@@ -106,7 +106,7 @@ Fonction Minus(ch en Chaîne) en Chaîne
 
   Pour i <- 1 à Longueur(ch)
     c <- Extraire(ch, i, 1)
-    condition <- ___EstAlpha(c)
+    condition <- @EstAlpha(c)
     condition <- condition ET ((CodeCar(c) >  64) ET (CodeCar(c) <  91))
     condition <- condition OU ((CodeCar(c) > 191) ET (CodeCar(c) < 222))
     Si condition Alors
@@ -414,7 +414,7 @@ Fonction Compter(T[] en Quelconque, valeur en Quelconque) en Entier
   Retourne c
 FinFonction
 
-Fonction ___Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en Entier
+Fonction @Index(T[] en Quelconque, valeur en Quelconque, casse en Booléen) en Entier
   # Teegre :
   # Retourne le premier index d'une valeur dans un Tableau.
   # Retourne -1 si non trouvée.
@@ -449,12 +449,12 @@ FinFonction
 
 Fonction IndexSC(T[] en Chaîne, valeur en Chaîne) en Entier
   # Teegre :
-  Retourne ___Index(T, valeur, VRAI)
+  Retourne @Index(T, valeur, VRAI)
 FinFonction
 
 Fonction Index(T[] en Quelconque, valeur en Quelconque) en Entier
   # Teegre :
-  Retourne ___Index(T, valeur, FAUX)
+  Retourne @Index(T, valeur, FAUX)
 FinFonction
 
 Fonction TMax(T[] en Quelconque) en Quelconque
@@ -512,7 +512,7 @@ Procédure Trancher(T[] en Quelconque, idx1, idx2 en Entier, &U[] en Quelconque)
   i Suivant
 FinProcédure
 
-Procédure ___Echanger(&T[] en Quelconque, index1, index2 en Entier)
+Procédure @Echanger(&T[] en Quelconque, index1, index2 en Entier)
   # Teegre :
   # Echange deux valeurs dans un Tableau selon les index donnés.
   Variable temp en Quelconque
@@ -535,7 +535,7 @@ Procédure Insérer(&T[] en Quelconque, valeur en Quelconque, index en Entier)
 
   T[Taille(T) - 1] <- valeur
   Pour i <- Taille(T) - 2 à index Pas -1
-    ___Echanger(T, i, i + 1)
+    @Echanger(T, i, i + 1)
   i Suivant
 FinProcédure
 
@@ -545,7 +545,7 @@ Procédure Supprimer(&T[] en Quelconque, index en Entier)
   Variable i en Entier
 
   Pour i <- index à Taille(T) - 2
-    ___Echanger(T, i, i + 1)
+    @Echanger(T, i, i + 1)
   i Suivant
   Redim T[Taille(T) - 2]
 FinProcédure
@@ -560,7 +560,7 @@ Fonction Pop(&T[] en Quelconque) en Quelconque
   Retourne e
 FinFonction
 
-Fonction ___Etrier(T[] en Quelconque, croissant en Booléen) en Booléen
+Fonction @Etrier(T[] en Quelconque, croissant en Booléen) en Booléen
   Variable i en Entier
   Variable cond en Booléen
 
@@ -577,7 +577,7 @@ Fonction ___Etrier(T[] en Quelconque, croissant en Booléen) en Booléen
   Retourne VRAI
 FinFonction
 
-Fonction ___Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Booléen) en Entier
+Fonction @Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Booléen) en Entier
   # Teegre :
   # Fonction de partitionnement d'un Tableau dans le cadre d'un tri `Quicksort`.
   Variable pivot en Quelconque
@@ -594,16 +594,16 @@ Fonction ___Partitionner(&T[] en Quelconque, min, max en Entier, croissant en Bo
       ordre <- T[j] >= pivot
     FinSi
     Si ordre Alors
-      ___Echanger(T, i, j)
+      @Echanger(T, i, j)
       i <- i + 1
     FinSi
   j Suivant
 
-  ___Echanger(T, i, max)
+  @Echanger(T, i, max)
   Retourne i
 FinFonction
 
-Procédure ___Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Booléen)
+Procédure @Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Booléen)
   # Teegre :
   # Algorithme de tri developpé par Tony Hoare en 1959 et publié en 1961.
   Variable p en Entier
@@ -612,31 +612,31 @@ Procédure ___Quicksort(&T[] en Quelconque, min, max en Entier, croissant en Boo
     Terminer
   FinSi
 
-  p <- ___Partitionner(T, min, max, croissant)
-  ___Quicksort(T, min, p - 1, croissant)
-  ___Quicksort(T, p + 1, max, croissant)
+  p <- @Partitionner(T, min, max, croissant)
+  @Quicksort(T, min, p - 1, croissant)
+  @Quicksort(T, p + 1, max, croissant)
 FinProcédure
 
 Procédure Trier(&T[] en Quelconque)
   # Teegre :
   # Trie un Tableau dans l'ordre croissant. 
 
-  Si ___Etrier(T, VRAI) Alors
+  Si @Etrier(T, VRAI) Alors
     Terminer
   FinSi
 
-  ___Quicksort(T, 0, Taille(T) - 1, VRAI)
+  @Quicksort(T, 0, Taille(T) - 1, VRAI)
 FinProcédure
 
 Procédure TrierD(&T[] en Quelconque)
   # Teegre :
   # Trie un Tableau dans l'ordre décroissant.
 
-  Si ___Etrier(T, FAUX) Alors
+  Si @Etrier(T, FAUX) Alors
     Terminer
   FinSi
 
-  ___Quicksort(T, 0, Taille(T) - 1, FAUX)
+  @Quicksort(T, 0, Taille(T) - 1, FAUX)
 FinProcédure
 
 Procédure Inverser(&T[] en Quelconque)
@@ -648,12 +648,12 @@ Procédure Inverser(&T[] en Quelconque)
   j <- Taille(T) - 1
 
   Pour i <- 0 à (Taille(T) - 1) / 2
-    ___Echanger(T, i, j)
+    @Echanger(T, i, j)
     j <- j - 1
   i Suivant
 FinProcédure
 
-Procédure ___InitTableau(&T[] en Quelconque, valeur en Quelconque)
+Procédure @InitTableau(&T[] en Quelconque, valeur en Quelconque)
   # Teegre :
   # Remplit un tableau avec la valeur donnée.
   Variable i en Entier
@@ -672,7 +672,7 @@ Procédure Mélanger(&T[] en Quelconque)
 
   Redim COMPTEUR[Taille(T) - 1]
   Redim TEMP[Taille(T) - 1]
-  ___InitTableau(COMPTEUR, 0)
+  @InitTableau(COMPTEUR, 0)
   i <- 0
 
   TantQue Somme(COMPTEUR) < Taille(T)
@@ -731,7 +731,7 @@ Procédure TConvertir(source[] en Quelconque, &cible[] en Quelconque)
   # Teegre :
   # Copie vers `cible` toutes les valeurs de `source` et les convertit
   # dans le type de données attribué à `cible`.
-  # NOTE: Ne fonctionne pas pour si le Tableau `cible` est supposé
+  # NOTE: Ne fonctionne pas si le Tableau `cible` est supposé
   # contenir un type Structure.
   Variable i en Entier
   Variable type en Chaîne
