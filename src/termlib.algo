@@ -148,7 +148,7 @@ Procédure PosCurG(col en Entier)
   Ecrire "\033[" & Chaîne(col) & "D" \
 FinProcédure
 
-Procédure PosEcrire(lgn, col en Entier, texte en Chaîne)
+Procédure PosEcrire(lgn, col en Entier, texte en Quelconque)
   # Teegre :
   # Ecrit le texte à la position donnée.
   PosCur(lgn, col)
