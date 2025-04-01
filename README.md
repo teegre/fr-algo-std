@@ -114,8 +114,9 @@ Copier les fichiers présents dans `src` vers le répertoire `$HOME/.local/lib/f
 * `PosCurG` : Procédure PosCurG(col en Entier)
 * `PosCurH` : Procédure PosCurH(lgn en Entier)
 * `PosEcrire` : Procédure PosEcrire(lgn en Entier, col en Entier, texte en Chaîne)
+* `RestaureEcran` : Procédure RestaureEcran()
 * `RVB` : Fonction RVB(r en Entier, v en Entier, b en Entier) en Chaîne
 * `RappelCur` : Procédure RappelCur()
 * `SauveCur` : Procédure SauveCur()
+* `SauveEcran` : Procédure SauveCur()
 
-En cours de développement.
