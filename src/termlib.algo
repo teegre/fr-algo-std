@@ -2,7 +2,7 @@ Librairie
 
 Constante @TERMLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @TERMLIB_VERSION  "0.0.1"
-Constante @TERMLIB_DATE_MOD "2025/03/25"
+Constante @TERMLIB_DATE_MOD "2025/04/01"
 
 ###########################################
 # UTILITAIRES POUR MODIFIER LES ATTRIBUTS
@@ -11,6 +11,18 @@ Constante @TERMLIB_DATE_MOD "2025/03/25"
 
 # NOTE: les attributs du texte sont remis à zéro
 # après utilisation dans l'environnement interactif.
+
+Procédure SauveEcran()
+  # Teegre :
+  # Sauvegarde l'écran en cours.
+  Ecrire "\033[?1049h" \
+FinProcédure
+
+Procédure RestaureEcran()
+  # Teegre :
+  # Restaure l'écran précédemment sauvegardé.
+  Ecrire "\033[?1049l" \
+FinProcédure
 
 Fonction RVB(r, v, b en Entier) en Chaîne
   # Teegre :
@@ -34,6 +46,22 @@ Fonction FRVB(r, v, b en Entier) en Chaîne
   code <- code & Chaîne(v) & ";"
   code <- code & Chaîne(b) & "m"
   Retourne code
+FinFonction
+
+Fonction CT(c en Entier) en Chaîne
+  # Teegre :
+  # Renvoie un code pour le terminal qui
+  # change la couleur du texte selon une
+  # couleur donnée sous la forme d'un Entier.
+  Retourne "\033[38;5;" & Chaîne(c) & "m"
+FinFonction
+
+Fonction CF(c en Entier) en Chaîne
+  # Teegre :
+  # Renvoie un code pour le terminal qui
+  # change la couleur de fond selon une
+  # couleur donnée sous la forme d'un Entier.
+  Retourne "\033[48;5;" & Chaîne(c) & "m"
 FinFonction
 
 # Teegre :

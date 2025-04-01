@@ -31,7 +31,10 @@ Constante @MOIS_ABR  ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juill."
 
 # Nb. jours par mois
 ###################### COMMUNE                                 BISSEXTILE
-Constante @NJOURSMOIS [[0,31,28,31,30,31,30,31,31,30,31,30,31],[0,31,29,31,30,31,30,31,31,30,31,30,31]]
+Constante @NJOURSMOIS [                    \\
+  [0,31,28,31,30,31,30,31,31,30,31,30,31], \\
+  [0,31,29,31,30,31,30,31,31,30,31,30,31]  \\
+]
 
 ################################
 # STRUCTURES POUR DATE ET HEURE
@@ -240,7 +243,8 @@ Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
 FinProcédure
 
 Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
-  # Teegre : Formate une date et une heure (en temps UNIX) selon un format spécifié,
+  # Teegre :
+  # Formate une date et une heure (en temps UNIX) selon un format spécifié,
   # en remplaçant les différents codes de formatage par les valeurs correspondantes
   # de la date et de l'heure.
   #
