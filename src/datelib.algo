@@ -8,7 +8,7 @@ Importer "stdlib" Alias std
 
 Constante @DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @DATELIB_VERSION  "0.0.1"
-Constante @DATELIB_DATE_MOD "2025/03/30"
+Constante @DATELIB_DATE_MOD "2025/04/22"
 
 Constante @EPOQUE 1970
 Constante @SECSJ  86400
@@ -24,13 +24,30 @@ Constante @MINJ -366
 Constante @GM7 (-@MINJ / 7 + 2) * 7
 
 
-Constante @JOURS ["dimanche" ,"lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
-Constante @JOURS_ABR ["dim." ,"lun.", "mar.", "mer.", "jeu.", "ven.", "sam."]
-Constante @MOIS    ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
-Constante @MOIS_ABR  ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juill.", "août", "sept.", "oct.", "nov.", "déc."]
+Constante @JOURS [                 \\
+  "dimanche" ,"lundi", "mardi",    \\
+  "mercredi", "jeudi", "vendredi", \\
+  "samedi"                         \\
+]
+
+Constante @JOURS_ABR [    \\
+  "dim." ,"lun.", "mar.", \\
+  "mer.", "jeu.", "ven.", \\
+  "sam."                  \\
+]
+Constante @MOIS [                                \\
+  "janvier", "février", "mars", "avril",         \\
+  "mai", "juin", "juillet", "août",              \\
+  "septembre", "octobre", "novembre", "décembre" \\
+]
+
+Constante @MOIS_ABR [               \\
+  "janv.", "févr.", "mars", "avr.", \\
+  "mai", "juin", "juill.", "août",  \\
+  "sept.", "oct.", "nov.", "déc."   \\
+]
 
 # Nb. jours par mois
-###################### COMMUNE                                 BISSEXTILE
 Constante @NJOURSMOIS [                    \\
   [0,31,28,31,30,31,30,31,31,30,31,30,31], \\
   [0,31,29,31,30,31,30,31,31,30,31,30,31]  \\
@@ -196,7 +213,6 @@ Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
   Si horodatage < 0 ET jourhor > 0 Alors
     numjour ← numjour - 1
   FinSi
-
 
   tdh.heure.N ← Entier((horodatage % 1) * 10^9)
   tdh.heure.S ← jourhor % 60

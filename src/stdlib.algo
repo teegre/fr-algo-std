@@ -2,7 +2,7 @@ Librairie
 
 Constante @STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @STDLIB_VERSION  "0.0.1"
-Constante @STDLIB_DATE_MOD "2025/03/25"
+Constante @STDLIB_DATE_MOD "2025/04/11"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
@@ -223,6 +223,13 @@ FinFonction
 #####################
 # AUTRES UTILITAIRES
 #####################
+
+Fonction EstTypeNum(n en Quelconque) en Booléen
+  # Teegre :
+  # Renvoie VRAI si la valeur donnée est de type
+  # Entier ou Numérique.
+  Retourne Type(n) = "Entier" OU Type(n) = "Numérique"
+FinFonction
 
 Fonction Base(nombre, base en Entier) en Chaîne
   # Teegre :
