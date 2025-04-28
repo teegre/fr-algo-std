@@ -2,11 +2,9 @@
 
 Importer "src/datelib" Alias date
 
-Variable ts en Entier
-Variable i en Entier
-Variable l en Entier
+Variables hd, i, l, e en Entier
 
-Procédure Vérifier(horodatage en Numérique, attendu en Chaîne)
+Fonction Vérifier(horodatage en Numérique, attendu en Chaîne) en Entier
   Variable obtenu en Chaîne
   obtenu ← date:Format(horodatage, "%a %F %T %z %Z %j %V")
 
@@ -14,31 +12,39 @@ Procédure Vérifier(horodatage en Numérique, attendu en Chaîne)
     Ecrire "❌ Échec : ", horodatage
     Ecrire "# obtenu  :", obtenu
     Ecrire "# attendu :", attendu
-  Sinon
-    Ecrire "✅ OK : ", obtenu
+    Retourne 1
   FinSi
-FinProcédure
+  Ecrire "✅ OK : ", obtenu
+  Retourne 0
+FinFonction
 
 Début
+  e ← 0
   Ecrire "#################################################################"
-  Ecrire "# Tests des fonctions 'datelib:UNIXversLocal' et 'datelib:Format'"
+  Ecrire "# Tests fixes"
   Ecrire "#################################################################"
-  Ecrire ""
 
   # Cas fixes
-  Vérifier(-3600,      "jeu. 01/01/1970 00:00:00 +0100 CET 001 01")
-  Vérifier(978303600,  "lun. 01/01/2001 00:00:00 +0100 CET 001 01")
-  Vérifier(-315622800, "ven. 01/01/1960 00:00:00 +0100 CET 001 53")
-  Vérifier(4102441200, "ven. 01/01/2100 00:00:00 +0100 CET 001 53")
-  Vérifier(915145200,  "ven. 01/01/1999 00:00:00 +0100 CET 001 53")
-  Vérifier(951692400,  "lun. 28/02/2000 00:00:00 +0100 CET 059 09") # Année bissextile
+  e ← e + Vérifier(-3600,      "jeu. 01/01/1970 00:00:00 +0100 CET 001 01")
+  e ← e + Vérifier(978303600,  "lun. 01/01/2001 00:00:00 +0100 CET 001 01")
+  e ← e + Vérifier(-315622800, "ven. 01/01/1960 00:00:00 +0100 CET 001 53")
+  e ← e + Vérifier(4102441200, "ven. 01/01/2100 00:00:00 +0100 CET 001 53")
+  e ← e + Vérifier(915145200,  "ven. 01/01/1999 00:00:00 +0100 CET 001 53")
+  e ← e + Vérifier(951692400,  "lun. 28/02/2000 00:00:00 +0100 CET 059 09") # Année bissextile
 
   Ecrire ""
 
+  Ecrire "#################################################################"
+  Ecrire "# Tests randomisés"
+  Ecrire "#################################################################"
+
   # Tests aléatoires
-  Pour i ← 1 à 10
-    ts ← Entier(Aléa() * 5000000000 - 1000000000)
-    l ← Longueur(Chaîne(ts))
-    Ecrire "🔄 Test avec", ts, std:RemplirGauche("=>", " ", 10+2-l), date:Format(Numérique(ts), "%a %F %T %z %Z %j %V")
+  Pour i ← 1 à 25
+    hd ← Entier(Aléa() * 5000000000 - 1000000000)
+    e ← e + Vérifier(hd, Commande("date -d @" & Chaîne(hd) & " '+%a %d/%m/%Y %T %z %Z %j %V'" ))
   i Suivant
+
+  Ecrire ""
+  Ecrire "#################################################################"
+  Ecrire "Tests terminés", e, "erreur(s) rencontrée(s)"
 Fin
