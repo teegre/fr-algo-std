@@ -19,10 +19,10 @@ Constante @SEMISO_A  1
 Constante @SEMISO1_A 4
 # Assure que les calculs couvrent les années bissextiles.
 Constante @MINJ -366
-# On cherche un multiple de 7 suffisamment grand pour que l'opération
-# modulo suivante soit toujours positive.
+# On cherche un multiple de 7 suffisamment grand pour que le résultat de l'opération
+# modulo utilisée dans le calcul du nombre de jours écoulés depuis le début de la
+# semaine ISO soit toujours positif.
 Constante @GM7 (-@MINJ / 7 + 2) * 7
-
 
 Constante @JOURS [                 \\
   "dimanche" ,"lundi", "mardi",    \\
@@ -134,7 +134,7 @@ FinFonction
 Fonction @SemaineISO(Y, j, A en Entier) en Entier
   # Teegre :
   # Renvoie le numéro de semaine ISO pour une année,
-  # une jour de l'année et jour de la semaine donnés.
+  # un jour de l'année et un jour de la semaine donnés.
   # <https://en.wikipedia.org/wiki/ISO_week_date#Algorithms>
   Variables V, y, Ap, yp en Entier
 
