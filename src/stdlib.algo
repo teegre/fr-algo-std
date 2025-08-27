@@ -2,7 +2,7 @@ Librairie
 
 Constante @STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @STDLIB_VERSION  "0.0.1"
-Constante @STDLIB_DATE_MOD "2025/04/11"
+Constante @STDLIB_DATE_MOD "2025/08/27"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
@@ -669,38 +669,59 @@ Procédure @InitTableau(&T[] en Quelconque, valeur en Quelconque)
   i Suivant
 FinProcédure
 
+# Procédure Mélanger(&T[] en Quelconque)
+#   # Teegre :
+#   # TODO: Particulièrement inefficace sur de grands tableaux.
+#   # Mélange les éléments d'un tableau.
+#   Tableau COMPTEUR[] en Entier
+#   Tableau TEMP[] en Quelconque
+#   Variables i, idx en Entier
+#
+#   Redim COMPTEUR[Taille(T) - 1]
+#   Redim TEMP[Taille(T) - 1]
+#   @InitTableau(COMPTEUR, 0)
+#   i <- 0
+#
+#   TantQue Somme(COMPTEUR) < Taille(T)
+#     idx <- Entier(Aléa() * Taille(T))
+#     Si COMPTEUR[idx] = 0 Alors
+#       TEMP[i] <- T[idx]
+#       COMPTEUR[idx] <- 1
+#       i <- i + 1
+#     FinSi
+#   FinTantQue
+#
+#   T <- TEMP
+# FinProcédure
+
 Procédure Mélanger(&T[] en Quelconque)
   # Teegre :
-  # TODO: Particulièrement inefficace sur de grands tableaux.
-  # Mélange les éléments d'un tableau.
-  Tableau COMPTEUR[] en Entier
-  Tableau TEMP[] en Quelconque
-  Variables i, idx en Entier
+  # Mélange les éléments d'un tableau selon la méthode de Fisher-Yates.
+  # <https://fr.wikipedia.org/wiki/M%C3%A9lange_de_Fisher-Yates>
+  Variables i, j en Entier
 
-  Redim COMPTEUR[Taille(T) - 1]
-  Redim TEMP[Taille(T) - 1]
-  @InitTableau(COMPTEUR, 0)
-  i <- 0
-
-  TantQue Somme(COMPTEUR) < Taille(T)
-    idx <- Entier(Aléa() * Taille(T))
-    Si COMPTEUR[idx] = 0 Alors
-      TEMP[i] <- T[idx]
-      COMPTEUR[idx] <- 1
-      i <- i + 1
-    FinSi
-  FinTantQue
-
-  T <- TEMP
+  Pour i ← Taille(T) - 1 à 0 Pas -1
+    j ← Entier(Aléa() * (i + 1))
+    @Echanger(T, i, j)
+  i Suivant
 FinProcédure
+
 
 Fonction TContient(T[] en Quelconque, v en Quelconque) en Booléen
   # Teegre :
   # Retourne VRAI si un élément donné se trouve dans un tableau.
   Variables d, f en Entier
 
+  Si Longueur(T) = 0 Alors
+    Retourne FAUX
+  FinSi
+
   d <- 0
-  f <- Taille(T) - 1
+  f <- Longueur(T) - 1
+
+  Si d = f Alors
+    Retourne T[0] = v
+  FinSi
 
   TantQue d < f + 1
     Si T[d] = v OU T[f] = v Alors
@@ -761,3 +782,20 @@ Procédure TConvertir(source[] en Quelconque, &cible[] en Quelconque)
     FinSi
   i Suivant
 FinProcédure
+
+Fonction TJoindre(T[] en Quelconque, séparateur en Chaîne) en Chaîne
+  # Teegre :
+  # Joint les éléments d'un tableau en une Chaîne.
+  Variable résultat en Chaîne
+  Variable i en Entier
+
+  Pour i ← 0 à Longueur(T) - 1
+    Si i = 0 Alors
+      résultat ← Chaîne(T[i])
+      Continuer
+    FinSi
+    résultat ← résultat & séparateur & Chaîne(T[i])
+  i Suivant
+
+  Retourne résultat
+FinFonction
