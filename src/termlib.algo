@@ -2,7 +2,7 @@ Librairie
 
 Constante @TERMLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @TERMLIB_VERSION  "0.0.1"
-Constante @TERMLIB_DATE_MOD "2025/04/01"
+Constante @TERMLIB_DATE_MOD "2025/09/17"
 
 ###########################################
 # UTILITAIRES POUR MODIFIER LES ATTRIBUTS
@@ -66,18 +66,25 @@ FinFonction
 
 # Teegre :
 # Attributs du texte :
+# La seconde constante annule l'attribut.
 # - GRAS
-Constante TGR "\033[1m"
+Constante TGR  "\033[1m"
+Constante TAGR "\033[22m"
 # - ATTENUÉ
-Constante TAT "\033[2m"
+Constante TAT  "\033[2m"
+Constante TAAT "\033[22m"
 # - ITALIQUE
-Constante TIT "\033[3m"
+Constante TIT  "\033[3m"
+Constante TAIT "\033[23m"
 # - SOULIGNÉ
-Constante TSO "\033[4m"
+Constante TSO  "\033[4m"
+Constante TASO "\033[24m"
 # - CLIGNOTANT
-Constante TCL "\033[5m"
+Constante TCL  "\033[5m"
+Constante TACL "\033[25m"
 # - INVERSE
-Constante TIN "\033[7m"
+Constante TIN  "\033[7m"
+Constante TAIN "\033[27m"
 
 # Couleurs du texte :
 # - NOIR
@@ -117,6 +124,7 @@ Constante FCY "\033[46m"
 Constante FBC "\033[47m"
 
 # - ANNULE
+# Annule tous les attibuts.
 Constante ANN "\033[0m"
 
 Fonction Hauteur() en Entier
