@@ -1,6 +1,6 @@
 Librairie
 
-Importer "stdlib" Alias std
+Importer "stdlib"
 
 #############
 # CONSTANTES
@@ -8,7 +8,7 @@ Importer "stdlib" Alias std
 
 Constante @DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @DATELIB_VERSION  "0.0.1"
-Constante @DATELIB_DATE_MOD "2025/04/22"
+Constante @DATELIB_DATE_MOD "2025/09/21"
 
 Constante @EPOQUE 1970
 Constante @SECSJ  86400
@@ -150,7 +150,7 @@ Fonction @SemaineISO(Y, j, A en Entier) en Entier
   y ← @JoursAn(Y)
 
   Si V < 1 Alors
-    Retourne @SemaineISO(Y-1, @JoursAn(Y-1), std:Abs(j - A))
+    Retourne @SemaineISO(Y-1, @JoursAn(Y-1), stdlib:Abs(j - A))
   FinSi
 
   Si V = 53 Alors
@@ -162,7 +162,7 @@ Fonction @SemaineISO(Y, j, A en Entier) en Entier
     FinSi
 
     # Jour de la semaine du début de la première semaine ISO
-    yp ← std:Abs(@SEMISO1_A - ((Ap - 1 + 7) % 7)) + 1
+    yp ← stdlib:Abs(@SEMISO1_A - ((Ap - 1 + 7) % 7)) + 1
     Si yp = 0 Alors
       yp ← 7
     FinSi
@@ -241,7 +241,7 @@ Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
   y ← @JoursAn(année)
 
   numjour ← numjour + 1
-  numjour ← std:Min(numjour, y)
+  numjour ← stdlib:Min(numjour, y)
 
   tdh.j ← numjour
 
@@ -319,32 +319,153 @@ Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
   FinSi
 
   ch ← format
-  ch ← std:Remplacer(ch, "%c", "%a %d %b %Y %H:%M:%S")
-  ch ← std:Remplacer(ch, "%D", "%d/%m/%y")
-  ch ← std:Remplacer(ch, "%F", "%d/%m/%Y")
-  ch ← std:Remplacer(ch, "%T", "%H:%M:%S")
-  ch ← std:Remplacer(ch, "%A", @JOURS[tdateheure.date.A])
-  ch ← std:Remplacer(ch, "%a", @JOURS_ABR[tdateheure.date.A])
-  ch ← std:Remplacer(ch, "%B", @MOIS[tdateheure.date.m - 1])
-  ch ← std:Remplacer(ch, "%b", @MOIS_ABR[tdateheure.date.m - 1])
-  ch ← std:Remplacer(ch, "%C", Chaîne(C))
-  ch ← std:Remplacer(ch, "%d", std:RemplirGauche(tdateheure.date.d, "0", 2))
-  ch ← std:Remplacer(ch, "%H", std:RemplirGauche(H, "0", 2))
-  ch ← std:Remplacer(ch, "%I", std:RemplirGauche(I, "0", 2))
-  ch ← std:Remplacer(ch, "%j", std:RemplirGauche(tdateheure.j, "0", 3))
-  ch ← std:Remplacer(ch, "%M", std:RemplirGauche(tdateheure.heure.M, "0", 2))
-  ch ← std:Remplacer(ch, "%m", std:RemplirGauche(tdateheure.date.m, "0", 2))
-  ch ← std:Remplacer(ch, "%N", std:RemplirGauche(tdateheure.heure.N, "0", 9))
-  ch ← std:Remplacer(ch, "%P", std:Minus(P))
-  ch ← std:Remplacer(ch, "%p", P)
-  ch ← std:Remplacer(ch, "%S", std:RemplirGauche(tdateheure.heure.S, "0", 2))
-  ch ← std:Remplacer(ch, "%V", std:RemplirGauche(tdateheure.V, "0", 2))
-  ch ← std:Remplacer(ch, "%x", Chaîne(x))
-  ch ← std:Remplacer(ch, "%Y", std:RemplirGauche(tdateheure.date.Y, "0", 4))
-  ch ← std:Remplacer(ch, "%y", std:RemplirGauche(y, "0", 2))
-  ch ← std:Remplacer(ch, "%Z", ZoneHoraireTxt(horodatage))
-  ch ← std:Remplacer(ch, "%z", Gauche(ZoneHoraire(horodatage), 5))
+  ch ← stdlib:Remplacer(ch, "%c", "%a %d %b %Y %H:%M:%S")
+  ch ← stdlib:Remplacer(ch, "%D", "%d/%m/%y")
+  ch ← stdlib:Remplacer(ch, "%F", "%d/%m/%Y")
+  ch ← stdlib:Remplacer(ch, "%T", "%H:%M:%S")
+  ch ← stdlib:Remplacer(ch, "%A", @JOURS[tdateheure.date.A])
+  ch ← stdlib:Remplacer(ch, "%a", @JOURS_ABR[tdateheure.date.A])
+  ch ← stdlib:Remplacer(ch, "%B", @MOIS[tdateheure.date.m - 1])
+  ch ← stdlib:Remplacer(ch, "%b", @MOIS_ABR[tdateheure.date.m - 1])
+  ch ← stdlib:Remplacer(ch, "%C", Chaîne(C))
+  ch ← stdlib:Remplacer(ch, "%d", stdlib:RemplirGauche(tdateheure.date.d, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%H", stdlib:RemplirGauche(H, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%I", stdlib:RemplirGauche(I, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%j", stdlib:RemplirGauche(tdateheure.j, "0", 3))
+  ch ← stdlib:Remplacer(ch, "%M", stdlib:RemplirGauche(tdateheure.heure.M, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%m", stdlib:RemplirGauche(tdateheure.date.m, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%N", stdlib:RemplirGauche(tdateheure.heure.N, "0", 9))
+  ch ← stdlib:Remplacer(ch, "%P", stdlib:Minus(P))
+  ch ← stdlib:Remplacer(ch, "%p", P)
+  ch ← stdlib:Remplacer(ch, "%S", stdlib:RemplirGauche(tdateheure.heure.S, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%V", stdlib:RemplirGauche(tdateheure.V, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%x", Chaîne(x))
+  ch ← stdlib:Remplacer(ch, "%Y", stdlib:RemplirGauche(tdateheure.date.Y, "0", 4))
+  ch ← stdlib:Remplacer(ch, "%y", stdlib:RemplirGauche(y, "0", 2))
+  ch ← stdlib:Remplacer(ch, "%Z", ZoneHoraireTxt(horodatage))
+  ch ← stdlib:Remplacer(ch, "%z", Gauche(ZoneHoraire(horodatage), 5))
 
   Retourne ch
 
+FinFonction
+
+Fonction FormatDuréeSecondes(durée en Entier) en Chaîne
+  # Teegre :
+  # Convertit une durée en secondes en une Chaîne :
+  # [A an(s), ][M mois, ][S semaine(s), ][hh:][mm:][ss][.ns]
+  Tableau parties[] en Chaîne
+  Variable index en Entier
+  Variable format en Chaîne
+  Variables Y, m, V, d, H, M, S en Entier
+  Variable i en Entier
+  Variable année en Entier
+  Variable nbjours en Entier
+
+  format ← ""
+
+  S ← durée % 60
+  durée ← durée / 60
+  M ← durée % 60
+  durée ← durée / 60
+  H ← durée % 24
+  durée ← durée / 24
+
+  Y ← 0
+  m ← 0
+  V ← 0
+  d ← 0
+
+  année ← @EPOQUE
+
+  TantQue durée >= @JoursAn(année)
+    durée ← durée - @JoursAn(année)
+    année ← année + 1
+    Y ← Y + 1
+  FinTantQue
+
+  Pour i ← 1 à 12
+    nbjours ← @NJOURSMOIS[@Bissextile(année),i]
+    Si durée >= nbjours Alors
+      durée ← durée - nbjours
+      m ← m + 1
+    Sinon
+      Sortir
+    FinSi
+  i Suivant
+
+  V ← durée / 7
+  durée ← durée % 7
+
+  d ← durée
+
+  Si Y > 0 Alors
+    Redim parties[0]
+    parties[0] ← Chaîne(Y) & " an"
+    Si Y > 1 Alors
+      parties[0] ← parties[0] & "s"
+    FinSi
+  FinSi
+  Si m > 0 Alors
+    Redim parties[Taille(parties)]
+    index ← Taille(parties) - 1
+    parties[index] ← Chaîne(m) & " mois"
+  FinSi
+  Si V > 0 Alors
+    Redim parties[Taille(parties)]
+    index ← Taille(parties) - 1
+    parties[index] ← Chaîne(V) & " semaine"
+    Si V > 1 Alors
+      parties[index] ←  parties[index] & "s"
+    FinSi
+  FinSi
+  Si d > 0 Alors
+    Redim parties[Taille(parties)]
+    index ← Taille(parties) - 1
+    parties[index] ← Chaîne(d) & " jour"
+    Si d > 1 Alors
+      parties[index] ← parties[index] & "s"
+    FinSi
+  FinSi
+  
+  Si 0 = H = M = S Alors
+    Si Taille(parties) = 0 Alors
+      format ← "0s"
+    SinonSi Taille(parties) = 1 Alors
+      format ← parties[0]
+    SinonSi Taille(parties) = 2 Alors
+      format ← parties[0] & " et " & parties[1]
+    Sinon
+      Pour i ← 0 à Taille(parties) - 2
+        Si i > 0 Alors
+          format ← format & ", "
+        FinSi
+        format ← format & parties[i]
+      i Suivant
+      format ← format & " et " & parties[Taille(parties)-1]
+    FinSi
+  Sinon
+    Pour i ← 0 à Taille(parties) - 1
+      Si i > 0 Alors
+        format ← format & ", "
+      FinSi
+      format ← format & parties[i]
+    i Suivant
+
+    Si format Alors
+      format ← format & ", "
+    FinSi
+
+    Si H > 0 Alors
+      format ← format & stdlib:RemplirGauche(H, "0", 2) & ":"
+      format ← format & stdlib:RemplirGauche(M, "0", 2) & ":"
+      format ← format & stdlib:RemplirGauche(S, "0", 2)
+    SinonSi M Alors
+      format ← format & stdlib:RemplirGauche(M, "0", 2) & ":"
+      format ← format & stdlib:RemplirGauche(S, "0", 2)
+    Sinon
+      format ← format & Chaîne(S) & "s"
+    FinSi
+  FinSi
+
+  Retourne format
 FinFonction
