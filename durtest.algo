@@ -67,13 +67,11 @@ Début
   Pour i ← 1 à 20
     # jusqu’à environ 6 années
     d ← Entier(Aléa() * 200000000)
-    # On compare à GNU date : on formate en "jours heures:minutes:secondes"
-    # pour avoir une vérif approximative
     Ecrire "Durée aléatoire : ", d, " → ", date:FormatDuréeSecondes(d)
 
   i Suivant
 
   Ecrire ""
   Ecrire "#################################################################"
-  Ecrire "Tests terminés, ", e, " erreur(s) rencontrée(s)"
+  Ecrire "Tests terminés,", e, "erreur(s) rencontrée(s)"
 Fin
