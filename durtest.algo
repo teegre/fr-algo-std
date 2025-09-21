@@ -1,0 +1,79 @@
+#! /usr/bin/env fralgo
+
+Importer "src/datelib" Alias date
+
+Variables i, d, e en Entier
+
+Fonction Vérifier(durée en Entier, attendu en Chaîne) en Entier
+  Variable obtenu en Chaîne
+  obtenu ← date:FormatDuréeSecondes(durée)
+
+  Si obtenu <> attendu Alors
+    Ecrire "❌ Échec : ", durée, " secondes"
+    Ecrire "# obtenu  :", obtenu
+    Ecrire "# attendu :", attendu
+    Retourne 1
+  FinSi
+  Ecrire "✅ OK : ", durée, " → ", obtenu
+  Retourne 0
+FinFonction
+
+Début
+  e ← 0
+  Ecrire "#################################################################"
+  Ecrire "# Tests fixes"
+  Ecrire "#################################################################"
+
+  # Zéro
+  e ← e + Vérifier(0, "0s")
+
+  # Quelques secondes
+  e ← e + Vérifier(5, "5s")
+  e ← e + Vérifier(59, "59s")
+
+  # Minutes + secondes
+  e ← e + Vérifier(60, "01:00")
+  e ← e + Vérifier(65, "01:05")
+
+  # Heures + minutes + secondes
+  e ← e + Vérifier(3600, "01:00:00")
+  e ← e + Vérifier(3661, "01:01:01")
+
+  # Jours entiers
+  e ← e + Vérifier(24*3600, "1 jour")
+  e ← e + Vérifier(2*24*3600 + 3661, "2 jours, 01:01:01")
+
+  # Semaines
+  e ← e + Vérifier(7*24*3600, "1 semaine")
+  e ← e + Vérifier(15*24*3600, "2 semaines et 1 jour")
+
+  # Mois (31 jours depuis époque)
+  e ← e + Vérifier(31*24*3600, "1 mois")
+
+  # Mois + jours
+  e ← e + Vérifier(45*24*3600, "1 mois et 2 semaines")
+
+  # Année simple (1970 n’est pas bissextile)
+  e ← e + Vérifier(365*24*3600, "1 an")
+
+  # Année bissextile (1972)
+  e ← e + Vérifier((365+366)*24*3600, "2 ans et 1 jour")
+
+  Ecrire ""
+  Ecrire "#################################################################"
+  Ecrire "# Tests randomisés"
+  Ecrire "#################################################################"
+
+  Pour i ← 1 à 20
+    # jusqu’à environ 6 années
+    d ← Entier(Aléa() * 200000000)
+    # On compare à GNU date : on formate en "jours heures:minutes:secondes"
+    # pour avoir une vérif approximative
+    Ecrire "Durée aléatoire : ", d, " → ", date:FormatDuréeSecondes(d)
+
+  i Suivant
+
+  Ecrire ""
+  Ecrire "#################################################################"
+  Ecrire "Tests terminés, ", e, " erreur(s) rencontrée(s)"
+Fin
