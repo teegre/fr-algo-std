@@ -1,0 +1,55 @@
+#! /usr/bin/env fralgo
+
+Importer "src/datelib" Alias date
+
+Variable e en Entier
+
+Fonction Vérifier(chdate en Chaîne) en Entier
+  Variables obtenu, attendu en Chaîne
+  Variable hd en Numérique
+
+  hd ← date:LocalversUNIX(chdate)
+  obtenu ← date:Format(hd, "%d/%m/%Y %H:%M:%S %z")
+  attendu ← Commande("date -d '@" & Chaîne(hd) & "' '+%d/%m/%Y %H:%M:%S %z'")
+
+  Si obtenu <> attendu Alors
+    Ecrire "❌ Échec : ", chdate
+    Ecrire "# obtenu  :", obtenu
+    Ecrire "# attendu :", attendu
+    Retourne 1
+  FinSi
+
+  Ecrire "✅ OK : ", chdate, " → ", obtenu
+  Retourne 0
+FinFonction
+
+
+Début
+  e ← 0
+
+  Ecrire "#################################################################"
+  Ecrire "# Tests fixes"
+  Ecrire "#################################################################"
+
+  e ← e + Vérifier("01/01/1970 00:00:00")
+  e ← e + Vérifier("24/09/2025 12:00:00")
+  e ← e + Vérifier("28/02/2000 23:59:59") # année bissextile
+
+  e ← e + Vérifier("29/02/2000 00:00:00") # valide
+
+  e ← e + Vérifier("31/12/1999 23:59:59")
+
+  # Formats alternatifs
+  e ← e + Vérifier("24-09-2025 12:00")
+  e ← e + Vérifier("24-09-2025T12:00:00")
+  e ← e + Vérifier("12:34:56")              # heure seule → aujourd’hui
+
+  e ← e + Vérifier("12:34")                 # heure seule (sans secondes)
+
+  e ← e + Vérifier("24/09/2025")            # date seule
+
+  Ecrire ""
+  Ecrire "#################################################################"
+  Ecrire "# Tests terminés :", e, " erreur(s)."
+  Ecrire "#################################################################"
+Fin

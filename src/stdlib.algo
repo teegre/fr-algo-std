@@ -2,7 +2,7 @@ Librairie
 
 Constante @STDLIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @STDLIB_VERSION  "0.0.1"
-Constante @STDLIB_DATE_MOD "2025/08/27"
+Constante @STDLIB_DATE_MOD "2025/09/24"
 
 #########################################
 # UTILITAIRES POUR CHAÎNES DE CARACTÈRES
@@ -35,6 +35,10 @@ Fonction EstNum(ch en Chaîne) en Booléen
   Variable i en Entier
   Variable c en Caractère
   Variable réponse en Booléen
+
+  Si NON(ch) Alors
+    Retourne FAUX
+  FinSi
 
   réponse <- VRAI
 
@@ -145,14 +149,18 @@ Procédure Scinder(chaine, separateur, &elements[] en Chaîne)
   TantQue Trouve(chaine, separateur) > 0
     sous_chaine <- Gauche(chaine, Trouve(chaine, separateur) - 1)
     index <- index + 1
-    Redim elements[index]
-    elements[index] <- sous_chaine
+    Si sous_chaine Alors
+      Redim elements[index]
+      elements[index] <- sous_chaine
+    FinSi
     chaine <- Droite(chaine, Longueur(chaine) - Trouve(chaine, separateur))
   FinTantQue
 
-  index <- index + 1
-  Redim elements[index]
-  elements[index] <- chaine
+  Si chaine Alors
+    index <- index + 1
+    Redim elements[index]
+    elements[index] <- chaine
+  FinSi
 FinProcédure
 
 Procédure Séparer(chaîne, &elements[] en Chaîne)

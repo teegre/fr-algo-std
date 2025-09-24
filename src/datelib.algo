@@ -8,7 +8,7 @@ Importer "stdlib"
 
 Constante @DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @DATELIB_VERSION  "0.0.1"
-Constante @DATELIB_DATE_MOD "2025/09/21"
+Constante @DATELIB_DATE_MOD "2025/09/24"
 
 Constante @EPOQUE 1970
 Constante @SECSJ  86400
@@ -45,6 +45,17 @@ Constante @MOIS_ABR [               \\
   "janv.", "févr.", "mars", "avr.", \\
   "mai", "juin", "juill.", "août",  \\
   "sept.", "oct.", "nov.", "déc."   \\
+]
+
+# Pour usage futur...
+Constante @MOTSCLEFS [                                                            \\
+  "an", "ans", "année", "années",  "après-demain", "aujourd'hui", "avant-hier",   \\
+  "dans", "demain",                                                               \\
+  "heure", "heures", "hier",                                                      \\
+  "il y a",                                                                       \\
+  "jour", "jours",                                                                \\
+  "mois",                                                                         \\
+  "semaine", "semaines"                                                           \\
 ]
 
 # Nb. jours par mois
@@ -110,11 +121,17 @@ FinFonction
 
 Fonction @dValide(Y, m, d en Entier) en Booléen
   # Teegre :
-  # Retourne 1 si le jour du mois 'd' est valide
-  # pour le mois 'm' de l'année 'Y', sinon 0
+  # Retourne VRAI si le jour du mois 'd' est valide
+  # pour le mois 'm' de l'année 'Y', sinon FAUX
   Variable J en Entier
+  Si d < 1 OU d > 31 Alors
+    Retourne FAUX
+  FinSi
+  Si m < 1 OU m > 12 Alors
+    Retourne FAUX
+  FinSi
   J ← @NJOURSMOIS[@Bissextile(Y), m]
-  Retourne Entier(J <= m ET J > 0)
+  Retourne (d <= J) ET (J > 0)
 FinFonction
 
 Fonction @JoursSemaineISO(j, A en Entier) en Entier
@@ -175,11 +192,181 @@ Fonction @SemaineISO(Y, j, A en Entier) en Entier
   Retourne V
 FinFonction
 
-Fonction LocalversUNIX(date en Chaîne) en Numérique
+Fonction LocalversUNIX(chdate en Chaîne) en Numérique
   # Teegre :
-  # Convertit une chaîne de caractères [J]J/[M]M/[DD]DD [H]H:[M]M:[S]S
-  Variables N, S, M, H, A, m, d, j en Entier
-  Retourne 0
+  # Convertit une chaîne de caractères représentant une date ISO
+  # en secondes écoulées depuis l'époque (temps UNIX) :
+  # 24-09-2025
+  # 12:00:00
+  # 12:00
+  # 24/09/2025T12:00:00
+  # 24/09/2025T12:00
+  # 24-09-2025T12:00:00
+  # 24-09-2025T12:00
+  # 24/09/2025 12:00:00
+  # 24/09/2025 12:00
+  # 24-09-2025 12:00:00
+  # 24-09-2025 12:00
+  #
+  # Si la date est absente, la date du jour est choisie par défaut.
+
+  Tableaux elems[], champs[] en Chaîne
+
+  Variables elemdate, elemheure en Chaîne
+  Variables d, m, Y, H, M, S en Entier
+  Variables i, pas en Entier
+  Variable horodatage en Numérique
+  Variable séparateur en Chaîne
+  Variable zh en Chaîne
+  Variables zhh, zhm, zhs en Entier
+
+  elemdate ← ""
+
+  Si stdlib:Contient(chdate, "T") Alors
+    séparateur ← "T"
+  Sinon
+    séparateur ← " "
+  FinSi
+
+  stdlib:Scinder(chdate, séparateur, elems)
+  Si Longueur(elems) = 1 Alors
+    Si stdlib:Contient(elems[0], "/") OU stdlib:Contient(elems[0], "-") Alors
+      elemdate ← elems[0]
+    SinonSi stdlib:Contient(elems[0], ":") Alors
+      elemheure ← elems[0]
+    Sinon
+      Panique "Format invalide : " & chdate
+    FinSi
+  SinonSi Taille(elems) = 2 Alors
+    elemdate ← elems[0]
+    elemheure ← elems[1]
+  Sinon
+    Panique "Format invalide : " & chdate
+  FinSi
+
+  H ← 0
+  M ← 0
+  S ← 0
+
+  Si NON(elemdate) Alors
+    # Récupération de la date du jour
+    elemdate ← Format(TempsUnix(), "%d/%m/%Y")
+  FinSi
+
+  Si elemdate Alors
+    Si stdlib:Contient(elemdate, "/") Alors
+      stdlib:Scinder(elemdate, "/", champs)
+      Si NON(champs) Alors
+        Panique "Format invalide !"
+      FinSi
+    SinonSi stdlib:Contient(elemdate, "-") Alors
+      stdlib:Scinder(elemdate, "-", champs)
+      Si NON(champs) Alors
+        Panique "Format invalide !"
+      FinSi
+    Sinon
+      Panique "Date invalide : " & elemdate
+    FinSi
+    Si stdlib:EstNum(champs[0]) Alors
+      d ← Entier(champs[0])
+    Sinon
+      Panique "Jour invalide : " & champs[0]
+    FinSi
+    Si stdlib:EstNum(champs[1]) Alors
+      m ← Entier(champs[1])
+    Sinon
+      Panique "Mois invalide : " & champs[0]
+    FinSi
+    Si stdlib:EstNum(champs[2]) Alors
+      Y ← Entier(champs[2])
+    Sinon
+      Panique "Année invalide : " & champs[0]
+    FinSi
+  FinSi
+
+  Si elemheure Alors
+    Si stdlib:Contient(elemheure, ":") Alors
+      stdlib:Scinder(elemheure, ":", champs)
+      Si NON(champs) Alors
+        Panique "Format invalide !"
+      FinSi
+    Sinon
+      Panique "Heure invalide : " & elemheure
+    FinSi
+    # Au moins heures et minutes...
+    Si Longueur(champs) < 2 Alors
+      Panique "Heure invalide : " & elemheure
+    FinSi
+    Si stdlib:EstNum(champs[0]) Alors
+      H ← Entier(champs[0])
+    Sinon
+      Panique "Heures invalides : " & champs[0]
+    FinSi
+    Si stdlib:EstNum(champs[1]) Alors
+      M ← Entier(champs[1])
+    Sinon
+      Panique "Minutes invalides : " & champs[1]
+    FinSi
+    Si Longueur(champs) = 3 Alors
+      Si stdlib:EstNum(champs[2]) Alors
+        S ← Entier(champs[2])
+      Sinon
+        Panique "Secondes invalides : " & champs[2]
+      FinSi
+    FinSi
+  FinSi
+
+  Si NON(@dValide(Y, m, d)) Alors
+    Panique "Date invalide : " & chdate
+  FinSi
+
+  Si H < 0 OU H > 23 Alors
+    Panique "Heures invalides : " & chdate
+  FinSi
+  Si M < 0 OU M > 59 Alors
+    Panique "Minutes invalides : " & chdate
+  FinSi
+  Si S < 0 OU S > 59 Alors
+    Panique "Secondes invalides : " & chdate
+  FinSi
+
+  horodatage ← 0
+  Si Y - @EPOQUE < 0 Alors
+    pas ← -1
+  Sinon
+    pas ← 1
+  FinSi
+
+  Pour i ← @EPOQUE à Y - pas Pas pas
+    horodatage ← horodatage + @JoursAn(i) * @SECSJ
+  i Suivant
+  
+  horodatage ← pas * horodatage
+
+  Pour i ← 1 à m - 1
+    horodatage ← horodatage + @NJOURSMOIS[@Bissextile(Y),i] * @SECSJ
+  i Suivant
+
+  horodatage ← horodatage + (d - 1) * @SECSJ
+  Si elemheure Alors
+    horodatage ← horodatage + H * 3600 + M * 60 + S
+
+    zh ← ZoneHoraire(horodatage)
+
+    # Compense heure d'été / heure d'hiver
+    Si Longueur(zh) > 5 Alors
+      zhh ← Entier(Gauche(zh, 3))
+      zhm ← Entier(Extraire(zh, 4, 2))
+      zhs ← Entier(Extraire(zh, 6, Longueur(zh) - 5))
+      horodatage ← horodatage - zhh * 3600 - zhm * 60 - zhs
+    Sinon
+      zhh ← Entier(zh)
+      horodatage ← horodatage - (zhh / 100 * 3600) - (zhh % 100 * 60)
+    FinSi
+  FinSi
+
+  Retourne horodatage
+
 FinFonction
 
 Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
@@ -202,7 +389,7 @@ Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
     horodatage ← horodatage + zhh * 3600 + zhm * 60 + zhs
   Sinon
     zhh ← Entier(zh)
-    horodatage ← horodatage + (zhh / 100 * 3600) + (zhh % 100 * 3600)
+    horodatage ← horodatage + (zhh / 100 * 3600) + (zhh % 100 * 60)
   FinSi
 
   année ← @EPOQUE
