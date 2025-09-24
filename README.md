@@ -65,6 +65,7 @@ Copier les fichiers présents dans `src` vers le répertoire `$HOME/.local/lib/f
 * `Format` : Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
 * `LocalversUNIX` : Fonction LocalversUNIX(date en Chaîne) en Numérique
 * `UNIXversLocal` : Procédure UNIXversLocal(horodatage en Numérique, &tdh en TDateHeure)
+* `FormatDuréeSecondes` : Fonction(durée en Entier) en Chaîne
 
 ## TERMLIB
 
