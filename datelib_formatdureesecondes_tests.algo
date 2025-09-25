@@ -32,8 +32,8 @@ Début
   e ← e + Vérifier(59, "59s")
 
   # Minutes + secondes
-  e ← e + Vérifier(60, "01:00")
-  e ← e + Vérifier(65, "01:05")
+  e ← e + Vérifier(60, "1m00s")
+  e ← e + Vérifier(65, "1m05s")
 
   # Heures + minutes + secondes
   e ← e + Vérifier(3600, "01:00:00")

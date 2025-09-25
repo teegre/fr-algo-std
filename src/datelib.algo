@@ -8,7 +8,7 @@ Importer "stdlib"
 
 Constante @DATELIB_AUTEUR   "Stéphane MEYER (Teegre)"
 Constante @DATELIB_VERSION  "0.0.1"
-Constante @DATELIB_DATE_MOD "2025/09/24"
+Constante @DATELIB_DATE_MOD "2025/09/25"
 
 Constante @EPOQUE 1970
 Constante @SECSJ  86400
@@ -536,26 +536,28 @@ Fonction Format(horodatage en Numérique, format en Chaîne) en Chaîne
 
 FinFonction
 
-Fonction FormatDuréeSecondes(durée en Entier) en Chaîne
+Fonction FormatDuréeSecondes(durée en Numérique) en Chaîne
   # Teegre :
   # Convertit une durée en secondes en une Chaîne :
   # [A an(s), ][M mois, ][S semaine(s), ][hh:][mm:][ss][.ns]
   Tableau parties[] en Chaîne
   Variable index en Entier
   Variable format en Chaîne
-  Variables Y, m, V, d, H, M, S en Entier
+  Variables Y, m, V, d, H, M, S, N en Entier
   Variable i en Entier
   Variable année en Entier
   Variable nbjours en Entier
 
   format ← ""
 
-  S ← durée % 60
-  durée ← durée / 60
-  M ← durée % 60
-  durée ← durée / 60
-  H ← durée % 24
-  durée ← durée / 24
+
+  N ← Entier((durée % 1) * 10^9)
+  S ← Entier(durée) % 60
+  durée ← Entier(durée) / 60
+  M ← Entier(durée) % 60
+  durée ← Entier(durée) / 60
+  H ← Entier(durée) % 24
+  durée ← Entier(durée) / 24
 
   Y ← 0
   m ← 0
@@ -580,10 +582,8 @@ Fonction FormatDuréeSecondes(durée en Entier) en Chaîne
     FinSi
   i Suivant
 
-  V ← durée / 7
-  durée ← durée % 7
-
-  d ← durée
+  V ← Entier(durée) / 7
+  d ← Entier(durée) % 7
 
   Si Y > 0 Alors
     Redim parties[0]
@@ -642,13 +642,21 @@ Fonction FormatDuréeSecondes(durée en Entier) en Chaîne
       format ← format & ", "
     FinSi
 
-    Si H > 0 Alors
+    Si H Alors
       format ← format & stdlib:RemplirGauche(H, "0", 2) & ":"
       format ← format & stdlib:RemplirGauche(M, "0", 2) & ":"
       format ← format & stdlib:RemplirGauche(S, "0", 2)
+      Si N Alors
+        format ← format & "." & Chaîne(N)
+      FinSi
     SinonSi M Alors
-      format ← format & stdlib:RemplirGauche(M, "0", 2) & ":"
-      format ← format & stdlib:RemplirGauche(S, "0", 2)
+      format ← format & Chaîne(M) & "m"
+      format ← format & stdlib:RemplirGauche(S, "0", 2) & "s"
+      Si N Alors
+        format ← format & "." & Chaîne(N) & "s"
+      FinSi
+    SinonSi N Alors
+      format ← format & Chaîne(S) & "." & Chaîne(N) & "s"
     Sinon
       format ← format & Chaîne(S) & "s"
     FinSi
