@@ -69,7 +69,7 @@ Copier les fichiers présents dans `src` vers le répertoire `$HOME/.local/lib/f
 
 ## TERMLIB
 
-### Variables locales termlib
+### Constantes termlib
 
 * `Constante ANN` = '\x1b[0m'
 * `Constante FBC` = '\x1b[47m'
@@ -80,6 +80,12 @@ Copier les fichiers présents dans `src` vers le répertoire `$HOME/.local/lib/f
 * `Constante FNO` = '\x1b[40m'
 * `Constante FRO` = '\x1b[41m'
 * `Constante FVE` = '\x1b[42m'
+* `Constante TAAT` = '\x1b[22m'
+* `Constante TACL` = '\x1b[25m'
+* `Constante TAGR` = '\x1b[22m'
+* `Constante TAIN` = '\x1b[27m'
+* `Constante TAIT` = '\x1b[23m'
+* `Constante TASO` = '\x1b[24m'
 * `Constante TAT` = '\x1b[2m'
 * `Constante TBC` = '\x1b[37m'
 * `Constante TBL` = '\x1b[34m'
